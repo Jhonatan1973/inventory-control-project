@@ -1,0 +1,211 @@
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="/logoCCB-trans.png" alt="Logo" width="80" height="40" class="d-inline-block align-text-top" />
+    </a>
+  </div>
+</nav>
+
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100" style="background-color: #eae9e9;">
+  <div class="card p-5 shadow" style="width: 100%; max-width: 400px; background-color: #fff; margin-top: -100px;">
+
+    <!-- Botões de seleção -->
+    <div class="mb-4 btn-group btn-group-equal" role="group" aria-label="Botões de troca">
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" [checked]="isLogin" />
+      <label class="btn btn-outline-secondary" for="btnradio1" (click)="switchToLogin()">Login</label>
+
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" [checked]="!isLogin" />
+      <label class="btn btn-outline-secondary" for="btnradio2" (click)="switchToRegister()">Cadastro</label>
+    </div>
+
+    <!-- Formulários com animação -->
+    <div *ngIf="showForm" [@fadeSlide]>
+      <ng-container *ngIf="isLogin; else cadastroTemplate">
+        <!-- LOGIN -->
+        <h3 class="text-center mb-4">LOGIN</h3>
+        <p class="text-center mb-4">Por favor, entre com suas credenciais</p>
+
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+          <div class="mb-3">
+            <label class="visually-hidden">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="email"
+              name="email"
+              required
+              #emailLogin="ngModel"
+              email
+            />
+            <div *ngIf="emailLogin.invalid && emailLogin.touched" class="text-danger small">Email inválido.</div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Senha</label>
+            <div class="input-group">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                class="form-control"
+                [(ngModel)]="senha"
+                name="senha"
+                required
+                minlength="12"
+                #senhaLogin="ngModel"
+              />
+              <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()">
+                <img
+                  [src]="showPassword ? '/olho-aberto-removebg-preview.png' : '/olho-fechado-removebg-preview.png'"
+                  [ngClass]="showPassword ? 'img-aberto' : 'img-fechado'"
+                />
+              </button>
+            </div>
+            <div *ngIf="senhaLogin.invalid && senhaLogin.touched" class="text-danger small">
+             
+            </div>
+          </div>
+
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="checkChecked" checked />
+            <label class="form-check-label" for="checkChecked">Lembrar-me</label>
+          </div>
+
+          <button type="submit" class="btn btn-secondary w-100" [disabled]="loginForm.invalid">Entrar</button>
+
+          <div class="text-center mt-3">
+            Esqueceu sua senha?
+            <a routerLink="/forgot-password" class="text-secondary">Clique aqui</a>
+          </div>
+        </form>
+      </ng-container>
+
+      <ng-template #cadastroTemplate>
+        <!-- CADASTRO -->
+        <h3 class="text-center mb-4">CADASTRO</h3>
+        <p class="text-center mb-4">Preencha os dados para se cadastrar</p>
+
+        <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+          <div class="mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Nome completo"
+              required
+              minlength="3"
+              [(ngModel)]="fullName"
+              name="fullName"
+              #fullNameInput="ngModel"
+            />
+            <div *ngIf="fullNameInput.invalid && fullNameInput.touched" class="text-danger small">
+              Nome deve ter no mínimo 3 caracteres.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Email"
+              required
+              email
+              [(ngModel)]="email"
+              name="emailRegister"
+              #emailRegister="ngModel"
+            />
+            <div *ngIf="emailRegister.invalid && emailRegister.touched" class="text-danger small">Email inválido.</div>
+          </div>
+
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Senha"
+              required
+              minlength="12"
+              [(ngModel)]="password"
+              name="password"
+              #passwordInput="ngModel"
+            />
+            <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger small">
+              Senha deve ter no mínimo 12 caracteres.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Confirmar senha"
+              required
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              #confirmPasswordInput="ngModel"
+            />
+            <div
+              *ngIf="(confirmPassword !== password) && confirmPasswordInput.touched"
+              class="text-danger small"
+            >
+              As senhas não conferem.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <select
+              [(ngModel)]="selectedSector"
+              name="sectors"
+              id="sectors"
+              class="form-select"
+              required
+              #sectorSelect="ngModel"
+            >
+              <option value="" disabled selected>Escolha um setor...</option>
+              <option value="Itaquera">Itaquera</option>
+              <option value="Brás">Brás</option>
+              <option value="Arthur Alvim">Arthur Alvim</option>
+              <option value="Belém">Belém</option>
+            </select>
+            <div *ngIf="sectorSelect.invalid && sectorSelect.touched" class="text-danger small">
+              Por favor, selecione um setor.
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-secondary w-100"
+            [disabled]="
+              registerForm.invalid ||
+              (password !== confirmPassword)
+            "
+          >
+            Cadastrar
+          </button>
+        </form>
+      </ng-template>
+    </div>
+
+    <!-- Tela de espera da aprovação -->
+    <div *ngIf="waitingApproval" class="text-center" [@fadeSlide]>
+      <h3 class="mb-4">Aguardando aprovação do administrador</h3>
+      <p>Você solicitou acesso ao setor <strong>{{ selectedSector | titlecase }}</strong>.</p>
+      <p>Por favor, aguarde até que o administrador aprove sua solicitação.</p>
+
+      <div *ngIf="!expired">
+        <p>Tempo restante para aprovação: <strong>{{ countdown }} segundos</strong></p>
+        <div
+          class="spinner-border text-secondary mt-4"
+          role="status"
+          style="width: 4rem; height: 4rem;"
+        >
+          <span class="visually-hidden">Carregando...</span>
+        </div>
+      </div>
+
+      <div *ngIf="expired" class="mt-4">
+        <p class="text-danger">Seu tempo para aprovação expirou.</p>
+        <button class="btn btn-outline-secondary" (click)="resendRequest()">
+          Reenviar solicitação
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

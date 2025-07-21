@@ -1,0 +1,18 @@
+.btn-group.btn-group-equal label.btn {
+    width: 50%;
+    text-align: center;
+  }
+.img-aberto {
+  width: 18px;
+  height: 18px;
+}
+
+.img-fechado {
+  width: 18px;
+  height: 12px;
+}
+
+.btn-group-equal label.btn {
+  width: 50%;
+  text-align: center;
+}
