@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { NgClass, NgIf, TitleCasePipe } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { interval, Subscription } from 'rxjs';
@@ -9,7 +9,7 @@ import { interval, Subscription } from 'rxjs';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [NgIf, NgClass, FormsModule, TitleCasePipe],
+  imports: [NgIf, NgClass, FormsModule],
   animations: [
     trigger('fadeSlide', [
       transition(':enter', [
