@@ -9,7 +9,6 @@
 <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100" style="background-color: #eae9e9;">
   <div class="card p-5 shadow" style="width: 100%; max-width: 400px; background-color: #fff; margin-top: -100px;">
 
-    <!-- Formulários com animação -->
     <div *ngIf="showForm" [@fadeSlide]>
       <ng-container *ngIf="isLogin; else cadastroTemplate">
         <!-- LOGIN -->
@@ -40,7 +39,7 @@
                 [(ngModel)]="senha"
                 name="senha"
                 required
-                minlength="12"
+                minlength="5"
                 #senhaLogin="ngModel"
               />
               <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()">
@@ -51,7 +50,7 @@
               </button>
             </div>
             <div *ngIf="senhaLogin.invalid && senhaLogin.touched" class="text-danger small">
-             
+              Senha inválida.
             </div>
           </div>
 
@@ -70,4 +69,8 @@
       </ng-container>
 
       <ng-template #cadastroTemplate>
-        
+        <!-- formulário de cadastro pode ir aqui se precisar -->
+      </ng-template>
+    </div>
+  </div>
+</div>

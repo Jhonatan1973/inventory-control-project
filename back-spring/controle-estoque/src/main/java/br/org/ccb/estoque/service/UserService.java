@@ -15,14 +15,17 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository repo;
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = repo.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(),
+                user.getEmail(),
+                user.getPassword(), // senha já criptografada do banco
                 java.util.List.of(() -> "ROLE_" + user.getRole())
         );
     }

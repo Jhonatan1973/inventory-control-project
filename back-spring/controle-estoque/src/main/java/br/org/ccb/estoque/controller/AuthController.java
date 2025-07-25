@@ -3,18 +3,14 @@ package br.org.ccb.estoque.controller;
 import br.org.ccb.estoque.entity.User;
 import br.org.ccb.estoque.repository.UserRepository;
 import br.org.ccb.estoque.service.JwtService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,18 +29,44 @@ public class AuthController {
     private BCryptPasswordEncoder encoder;
 
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody User user) {
+        if (repo.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email já cadastrado");
+        }
         user.setPassword(encoder.encode(user.getPassword()));
         repo.save(user);
-        return "Usuário cadastrado com sucesso!";
+        return ResponseEntity.ok("Usuário cadastrado com sucesso!");
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
-        authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
-        );
+    public ResponseEntity<?> login(@RequestBody User user) {
+        try {
+            authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+            );
 
-        return jwtService.generateToken(user.getEmail());
+            String token = jwtService.generateToken(user.getEmail());
+            return ResponseEntity.ok(new JwtResponse(token));
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(401).body("Email ou senha inválidos.");
+        } catch (AuthenticationException ex) {
+            return ResponseEntity.status(403).body("Falha na autenticação.");
+        }
+    }
+
+    public static class JwtResponse {
+        private String token;
+
+        public JwtResponse(String token) {
+            this.token = token;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
     }
 }
