@@ -42,23 +42,22 @@ export class LoginComponent implements OnDestroy {
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
-
-  onSubmit(): void {
-    if (this.isLogin) {
-      this.authService.login(this.email, this.senha).subscribe({
-        next: (res) => {
-          console.log('Login OK, token:', res.token);
-          localStorage.setItem('token', res.token);
-          this.router.navigate(['/dashboard']);
-        },
-        error: (err) => {
-          console.error('Erro ao fazer login:', err);
-          alert('Email ou senha inválidos');
-        }
-      });
-    }
+onSubmit(): void {
+  if (this.isLogin) {
+    this.authService.login(this.email, this.senha).subscribe({
+      next: (res) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('username', res.username);
+        localStorage.setItem('sectors', res.sectors);
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error('Erro ao fazer login:', err);
+        alert('Email ou senha inválidos');
+      }
+    });
   }
-
+}
   ngOnDestroy(): void {
     this.timerSubscription?.unsubscribe();
   }

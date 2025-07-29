@@ -1,0 +1,94 @@
+.menu-desktop-content {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  left: 0;
+  margin: 70px;
+  transform: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 4px 40px;
+  background-color: #ededed;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-group .btn {
+  white-space: nowrap;
+  padding: 4px 12px;
+  font-size: 14px;
+}
+
+#label-btnradio1 {
+  margin-left: -37px;
+  padding: 5px 40px;
+  text-align: justify;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #000000;
+  background-color: transparent;
+}
+
+#btnradio1:checked + #label-btnradio1 {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+#label-btnradio2 {
+  padding: 5px 30px;
+  text-align: justify;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #000000;
+  background-color: transparent;
+}
+#btnradio2:checked + #label-btnradio2 {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+#label-btnradio3 {
+  padding: 5px 30px;
+  text-align: justify;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #000000;
+  background-color: transparent;
+}
+#btnradio3:checked + #label-btnradio3 {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+#label-btnradio4 {
+  padding: 5px 30px;
+  text-align: justify;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #000000;
+  background-color: transparent;
+}
+#btnradio4:checked + #label-btnradio4{
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+}
+input[type="radio"]:checked + label img {
+  filter: brightness(0) invert(1);
+}
+img{
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    margin-left: -10px;
+    margin-top: -2px;
+    justify-content: center;
+}

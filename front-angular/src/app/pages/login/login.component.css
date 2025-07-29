@@ -16,3 +16,25 @@
   width: 50%;
   text-align: center;
 }
+.login-background{
+  top: 0px;
+  position: absolute;
+}
+input.form-control {
+  border: 2px solid #cccccc;
+  box-shadow: none;/* rosa por exemplo */
+}
+.navbar{
+  position: absolute;
+  width: 100%;
+  
+}
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  position: absolute;
+  margin-top: -15px; /* você mantém isso */
+  left: 50%; /* centraliza horizontalmente */
+  transform: translateX(-50%); /* empurra metade pra esquerda pra alinhar certinho */
+}

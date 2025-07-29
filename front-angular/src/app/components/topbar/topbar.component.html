@@ -1,0 +1,36 @@
+<nav class="navbar" style="background-color: #ededed; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+  <div class="container-fluid align-items-center d-flex justify-content-between">
+    <a class="navbar-brand" href="#">
+      <img src="/logoCCB-trans.png" alt="Logo" width="80" height="40" />
+    </a>
+
+    <div class="topbar-text-content d-flex align-items-center">
+      <div>
+        <h1>Sistema de Estoque</h1>
+        <!--<p>Brás</p>  Somente quando ele fizer login, para puxar o setor dele-->
+      </div>
+    </div>
+<div *ngIf="isLoggedIn" class="topbar-user-section d-flex align-items-center">
+  <div class="topbar-user-info">
+    <h2>{{ username }}</h2>
+    <p>{{ sectors }}</p>
+  </div>
+  <button *ngIf="isLoggedIn" (click)="logout()" id="logout-btn" class="logout-button">
+    <img src="/topbar/logo-exit.png" alt="">
+    <p >Sair</p>
+  </button>
+</div>
+    <button *ngIf="isLoggedIn" id="menu-button-mobile" class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Menu</button>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header" id="offcanvasRightLabel">
+    <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    ...
+  </div>
+</div>
+  </div>
+</nav>
+<ng-content></ng-content>

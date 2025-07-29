@@ -18,7 +18,9 @@ public class AdminController {
     public User createUser(@RequestParam String username,
                            @RequestParam String email,
                            @RequestParam String password,
-                           @RequestParam(defaultValue = "USER") String role) {
-        return userService.createUser(username, email, password, role);
+                           @RequestParam String sector,
+                           @RequestParam(defaultValue = "USER") String role)
+                           {
+        return userService.createUser(username, email, password, role, sector);
     }
 }

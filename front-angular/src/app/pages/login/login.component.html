@@ -1,16 +1,23 @@
-<nav class="navbar bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      <img src="/logoCCB-trans.png" alt="Logo" width="80" height="40" class="d-inline-block align-text-top" />
+
+<nav class="navbar" style="background-color: #ededed; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+  <div class="container-fluid"> 
+    <a class="navbar-brand" href="#" >
+       <img src="/logoCCB-trans.png" alt="Logo" width="80" height="40" />
     </a>
+        <div class="topbar-text-content d-flex align-items-center">
+      <div>
+        <h1>Sistema de Estoque</h1>
+        <!--<p>Brás</p>  Somente quando ele fizer login, para puxar o setor dele-->
+      </div>
+    </div>
   </div>
 </nav>
 
-<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100" style="background-color: #eae9e9;">
-  <div class="card p-5 shadow" style="width: 100%; max-width: 400px; background-color: #fff; margin-top: -100px;">
+<div id="login-background" class="container-fluid d-flex justify-content-center align-items-center " style="background: linear-gradient(to right, #eae9e9, #b0b0b0); height: 100vh;">
+  <div class="card p-5 shadow" style="width: 100%; max-width: 400px; margin-top: -10px; background-color: #ededed; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
 
     <div *ngIf="showForm" [@fadeSlide]>
-      <ng-container *ngIf="isLogin; else cadastroTemplate">
+      <ng-container  *ngIf="isLogin; else cadastroTemplate">
         <!-- LOGIN -->
         <h3 class="text-center mb-4">LOGIN</h3>
         <p class="text-center mb-4">Por favor, entre com suas credenciais</p>
@@ -27,7 +34,7 @@
               #emailLogin="ngModel"
               email
             />
-            <div *ngIf="emailLogin.invalid && emailLogin.touched" class="text-danger small">Email inválido.</div>
+            <div *ngIf="emailLogin.invalid && emailLogin.touched" class="text-danger small">Senha ou email inválidos.</div>
           </div>
 
           <div class="mb-2">
@@ -44,13 +51,13 @@
               />
               <button type="button" class="btn btn-outline-secondary" (click)="togglePassword()">
                 <img
-                  [src]="showPassword ? '/olho-aberto-removebg-preview.png' : '/olho-fechado-removebg-preview.png'"
+                  [src]="showPassword ? '/login-page/olho-aberto-removebg-preview.png' : '/login-page/olho-fechado-removebg-preview.png'"
                   [ngClass]="showPassword ? 'img-aberto' : 'img-fechado'"
                 />
               </button>
             </div>
             <div *ngIf="senhaLogin.invalid && senhaLogin.touched" class="text-danger small">
-              Senha inválida.
+              Senha ou email inválidos.
             </div>
           </div>
 

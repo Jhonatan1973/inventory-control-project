@@ -1,0 +1,91 @@
+h1{
+    font-size: 24px;
+    font-weight: bold; 
+    display: flex;
+    position: absolute;
+    margin-top: -15px;
+}
+
+.topbar-text-content{
+    font-size: 20px;
+}
+
+.topbar-user-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-user-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.topbar-user-info h2 {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.701);
+}
+
+.topbar-user-info p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.logout-button {
+  margin-left: 10px;
+  border-radius: 10px;
+  background-color: transparent;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid rgba(0, 0, 0, 0.086);
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-button img {
+  width: 30px;
+  height: 30px;
+}
+
+.logout-button p {
+  margin: 0;
+}
+
+/* Oculta o botão por padrão */
+button[data-bs-toggle="offcanvas"] {
+  display: none;
+}
+
+/* Exibe o botão apenas quando a tela for até 969px */
+@media (max-width: 969px) {
+  button[data-bs-toggle="offcanvas"] {
+    display: block;
+  }
+}
+
+@media (max-width: 969px) {
+    .topbar-user-info p{
+        display: none;
+    }
+    .topbar-user-info h2{
+        display: none;
+    }
+    .logout-button{
+        display: none;
+    }
+    h1 {
+
+        margin-left: 0px;
+        margin-right: 90px;
+        margin-top: 5px;
+        position: relative;
+    }
+}
+
+
+

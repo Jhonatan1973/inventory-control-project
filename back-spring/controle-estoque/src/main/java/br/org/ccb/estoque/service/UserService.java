@@ -25,17 +25,17 @@ public class UserService implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
-                user.getPassword(), // senha já criptografada do banco
+                user.getPassword(),
                 java.util.List.of(() -> "ROLE_" + user.getRole())
         );
     }
-
-    public User createUser(String username, String email, String password, String role) {
+    public User createUser(String username, String email, String password, String role, String sector) {
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password)); // criptografa a senha
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
+        user.setSectors(sector);
         return repo.save(user);
     }
 }

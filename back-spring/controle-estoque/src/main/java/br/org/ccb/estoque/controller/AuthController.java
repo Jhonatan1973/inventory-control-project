@@ -12,6 +12,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -45,8 +47,19 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
             );
 
-            String token = jwtService.generateToken(user.getEmail());
-            return ResponseEntity.ok(new JwtResponse(token));
+            Optional<User> userOptional = repo.findByEmail(user.getEmail());
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.status(404).body("Usuário não encontrado.");
+            }
+
+            User foundUser = userOptional.get();
+            String token = jwtService.generateToken(foundUser.getEmail());
+
+            return ResponseEntity.ok(new JwtResponse(
+                    token,
+                    foundUser.getUsername(),
+                    foundUser.getSectors()
+            ));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(401).body("Email ou senha inválidos.");
         } catch (AuthenticationException ex) {
@@ -56,17 +69,37 @@ public class AuthController {
 
     public static class JwtResponse {
         private String token;
+        private String username;
+        private String sectors;
 
-        public JwtResponse(String token) {
+        public JwtResponse(String token, String username, String sectors) {
             this.token = token;
+            this.username = username;
+            this.sectors = sectors;
         }
 
         public String getToken() {
             return token;
         }
 
+        public String getUsername() {
+            return username;
+        }
+
+        public String getSectors() {
+            return sectors;
+        }
+
         public void setToken(String token) {
             this.token = token;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public void setSectors(String sectors) {
+            this.sectors = sectors;
         }
     }
 }
