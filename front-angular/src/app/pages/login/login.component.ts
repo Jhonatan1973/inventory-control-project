@@ -30,6 +30,7 @@ export class LoginComponent implements OnDestroy {
   showPassword = false;
   isLogin = true;
 
+
   showForm = true;
   waitingApproval = false;
 
@@ -49,6 +50,7 @@ onSubmit(): void {
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', res.username);
         localStorage.setItem('sectors', res.sectors);
+        localStorage.setItem('role', res.role);
         this.router.navigate(['/home']);
       },
       error: (err) => {

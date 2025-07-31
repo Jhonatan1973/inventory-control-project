@@ -10,7 +10,6 @@ import { Router, NavigationEnd } from '@angular/router';
   styleUrl: './topbar.component.css',
   standalone: true,
 })
-// ...existing code...
 export class TopbarComponent implements OnInit {
   isLoggedIn = false;
   username: string | null = '';

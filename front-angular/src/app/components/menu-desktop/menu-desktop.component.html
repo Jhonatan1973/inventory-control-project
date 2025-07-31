@@ -1,16 +1,74 @@
 <div class="menu-desktop-content">
-    <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check"  name="btnradio" id="btnradio1" autocomplete="off" checked>
-            <label id="label-btnradio1" class="btn" for="btnradio1"><img src="menu/graphic-icon.png" alt="">Visão Geral</label>
+  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-            <label id="label-btnradio2" class="btn" for="btnradio2"><img src="menu/table-icon.png" alt="">Gerenciar Estoque</label>
+    <input
+      type="radio"
+      class="btn-check"
+      name="btnradio"
+      id="btnradio1"
+      autocomplete="off"
+      [checked]="currentRoute === '/home'"
+    />
+    <label
+      id="label-btnradio1"
+      class="btn"
+      for="btnradio1"
+      (click)="navigateTo('/home')"
+    >
+      <img src="menu/graphic-icon.png" alt="/home" /> Visão Geral
+    </label>
 
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-            <label id="label-btnradio3" class="btn" for="btnradio3"><img src="menu/user-icon.png" alt="">Usuário</label>
+    <input
+      type="radio"
+      class="btn-check"
+      name="btnradio"
+      id="btnradio2"
+      autocomplete="off"
+      [checked]="currentRoute === '/stock'"
+    />
+    <label
+      id="label-btnradio2"
+      class="btn"
+      for="btnradio2"
+      (click)="navigateTo('/stock')"
+    >
+      <img src="menu/table-icon.png" alt="" /> Gerenciar Estoque
+    </label>
 
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
-            <label id="label-btnradio4" class="btn" for="btnradio4"><img src="menu/setting-icon.png" alt="">Configurações</label>
-        </div>
-    </div>
+    <input
+      type="radio"
+      class="btn-check"
+      name="btnradio"
+      id="btnradio3"
+      autocomplete="off"
+      [checked]="currentRoute === '/usuario'"
+    />
+    <label
+      id="label-btnradio3"
+      class="btn"
+      for="btnradio3"
+      (click)="navigateTo('/usuario')"
+    >
+      <img src="menu/user-icon.png" alt="" /> Usuário
+    </label>
+
+    <input
+      type="radio"
+      class="btn-check"
+      name="btnradio"
+      id="btnradio4"
+      autocomplete="off"
+      [checked]="currentRoute === '/config'"
+    />
+    <label
+      id="label-btnradio4"
+      class="btn"
+      for="btnradio4"
+      (click)="navigateTo('/config')"
+    >
+      <img src="menu/setting-icon.png" alt="" /> Configurações
+    </label>
+  </div>
+</div>
+
 <ng-content></ng-content>

@@ -1,12 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-menu-desktop',
-  imports: [],
   templateUrl: './menu-desktop.component.html',
-  styleUrl: './menu-desktop.component.css',
+  styleUrls: ['./menu-desktop.component.css'],
   standalone: true,
 })
-export class MenuDesktopComponent {
+export class MenuDesktopComponent implements OnInit {
+  currentRoute: string = '';
 
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.currentRoute = this.router.url;
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.currentRoute = event.urlAfterRedirects;
+      });
+  }
+
+  navigateTo(page: string) {
+    if (page) {
+      this.router.navigateByUrl(page);
+      this.currentRoute = page;
+    }
+  }
 }

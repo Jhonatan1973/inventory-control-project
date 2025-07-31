@@ -5,6 +5,7 @@ export interface LoginResponse {
   token: string;
   username: string;
   sectors: string;
+  role: string;
 }
 
 @Injectable({ providedIn: 'root' })

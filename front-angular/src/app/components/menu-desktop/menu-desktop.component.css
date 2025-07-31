@@ -80,6 +80,7 @@
 input[type="radio"]:checked + label img {
   filter: brightness(0) invert(1);
 }
+
 img{
     width: 20px;
     height: 20px;

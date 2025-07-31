@@ -73,14 +73,12 @@ button[data-bs-toggle="offcanvas"] {
         position: relative;
     }
 }
-/* MENU OFFCANVAS (MOBILE) */
-.offcanvas-header,
-.offcanvas-body {
+/* MOBILE NAVIGATION PANEL */
+.nav-mobile-header,
+.nav-mobile-body {
   background-color: #efefef;
 }
-
-/* BOTÕES VERTICAIS NO MOBILE */
-.menu-option {
+.nav-button {
   margin: 5px 0;
   display: flex;
   align-items: center;
@@ -88,27 +86,25 @@ button[data-bs-toggle="offcanvas"] {
   background-color: #f1f1f1;
   color: #333;
   border: none;
-  width: 100%;
-  padding: 20px 10px;
+  width: 210%;
+  padding: 20px 20px;
   justify-content: flex-start;
   transition: background-color 0.3s;
 }
-.btn-group-vertical .menu-option {
+.btn-group-vertical .nav-button {
   border-radius: 10px !important;
+  margin-bottom: 6px;
 }
-
-.menu-option img {
+.nav-button img {
   width: 24px;
   height: 24px;
   filter: none;
   transition: filter 0.3s;
 }
-
-input[type="radio"]:checked + label.menu-option {
+input[type="radio"]:checked + label.nav-button {
   background-color: rgba(0, 0, 0, 0.7);
   color: #fff;
 }
-
-input[type="radio"]:checked + label.menu-option img {
+input[type="radio"]:checked + label.nav-button img {
   filter: brightness(0) invert(1);
 }

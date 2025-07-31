@@ -1,5 +1,8 @@
 <app-topbar></app-topbar>
-<div id="login-background" class="container-fluid d-flex justify-content-center align-items-center " style="background: linear-gradient(to right, #dbdbdb, #dbdbdb); height: 100%;"></div><app-menu-desktop id="menu-desktop"></app-menu-desktop>
+
+<div id="login-background" class="container-fluid d-flex justify-content-center align-items-center " style="background: linear-gradient(to right, #dbdbdb, #dbdbdb); height: 100%;"></div>
+<app-menu-desktop id="menu-desktop"></app-menu-desktop>
+
 <div class="container-micro-information">
   <div class="micro-information-area" id="table-quantity">
     <div class="img-content-home" id="img-table">
@@ -31,5 +34,48 @@
     </div>
     <h1>Última Atualização</h1>
     <p class="consert-last-update">29/07/25</p>
+  </div>
+</div>
+<div *ngIf="isLoggedIn" class="sistem-status">
+  <h2>Status do Sistema</h2>
+  <p>Informações sobre o setor</p>
+
+  <div class="status-box">
+    <div class="status-line">
+      <h3>Setor Ativo:</h3>
+      <p>{{ sectors }}</p>
+      <span class="status-indicator ativo">Ativo</span>
+    </div>
+  </div>
+
+  <div class="status-box">
+    <div class="status-line">
+      <h3>Permissão:</h3>
+      <p>{{ role }}</p>
+      <span class="status-indicator user">{{ role }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="historico-acoes">
+  <h2>Histórico de Ação</h2>
+  <p>Últimas atividades registradas</p>
+
+  <div class="caixa-atividades">
+    <div class="linha-atividade">
+      <h3>Nome da ação</h3>
+      <p>O que foi alterado</p>
+      <span class="data-alteracao">29/07/25</span>
+    </div>
+    <div class="linha-atividade">
+      <h3>Outra ação</h3>
+      <p>Mais uma alteração</p>
+      <span class="data-alteracao">30/07/25</span>
+    </div>
+    <div class="linha-atividade">
+      <h3>Terceira ação</h3>
+      <p>Alguma modificação</p>
+      <span class="data-alteracao">31/07/25</span>
+    </div>
   </div>
 </div>

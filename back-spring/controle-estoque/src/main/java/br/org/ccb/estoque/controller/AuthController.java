@@ -3,6 +3,8 @@ package br.org.ccb.estoque.controller;
 import br.org.ccb.estoque.entity.User;
 import br.org.ccb.estoque.repository.UserRepository;
 import br.org.ccb.estoque.service.JwtService;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -58,7 +60,8 @@ public class AuthController {
             return ResponseEntity.ok(new JwtResponse(
                     token,
                     foundUser.getUsername(),
-                    foundUser.getSectors()
+                    foundUser.getSectors(),
+                    foundUser.getRole()
             ));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(401).body("Email ou senha inválidos.");
@@ -67,39 +70,19 @@ public class AuthController {
         }
     }
 
+    @Setter
+    @Getter
     public static class JwtResponse {
         private String token;
         private String username;
         private String sectors;
+        private String role;
 
-        public JwtResponse(String token, String username, String sectors) {
+        public JwtResponse(String token, String username, String sectors, String role) {
             this.token = token;
             this.username = username;
             this.sectors = sectors;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getSectors() {
-            return sectors;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public void setSectors(String sectors) {
-            this.sectors = sectors;
+            this.role = role;
         }
     }
 }
