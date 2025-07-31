@@ -33,7 +33,6 @@
   text-align: justify;
   border-radius: 6px;
   font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   color: #000000;
   background-color: transparent;
 }
@@ -47,7 +46,6 @@
   text-align: justify;
   border-radius: 6px;
   font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   color: #000000;
   background-color: transparent;
 }
@@ -60,7 +58,6 @@
   text-align: justify;
   border-radius: 6px;
   font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   color: #000000;
   background-color: transparent;
 }
@@ -73,7 +70,6 @@
   text-align: justify;
   border-radius: 6px;
   font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   color: #000000;
   background-color: transparent;
 }
@@ -91,4 +87,9 @@ img{
     margin-left: -10px;
     margin-top: -2px;
     justify-content: center;
+}
+@media (max-width: 968px) {
+  .menu-desktop-content {
+    display: none;
+  }
 }

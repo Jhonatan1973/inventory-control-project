@@ -5,35 +5,29 @@ h1{
     position: absolute;
     margin-top: -15px;
 }
-
 .topbar-text-content{
     font-size: 20px;
 }
-
 .topbar-user-section {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
 .topbar-user-info {
   display: flex;
   flex-direction: column;
   text-align: right;
 }
-
 .topbar-user-info h2 {
   margin: 0;
   font-size: 16px;
   color: rgba(0, 0, 0, 0.701);
 }
-
 .topbar-user-info p {
   margin: 0;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.6);
 }
-
 .logout-button {
   margin-left: 10px;
   border-radius: 10px;
@@ -46,28 +40,22 @@ h1{
   align-items: center;
   gap: 8px;
 }
-
 .logout-button img {
   width: 30px;
   height: 30px;
 }
-
 .logout-button p {
   margin: 0;
 }
-
-/* Oculta o botão por padrão */
 button[data-bs-toggle="offcanvas"] {
   display: none;
 }
-
-/* Exibe o botão apenas quando a tela for até 969px */
 @media (max-width: 969px) {
   button[data-bs-toggle="offcanvas"] {
     display: block;
+    margin-left: -50px
   }
 }
-
 @media (max-width: 969px) {
     .topbar-user-info p{
         display: none;
@@ -79,13 +67,48 @@ button[data-bs-toggle="offcanvas"] {
         display: none;
     }
     h1 {
-
         margin-left: 0px;
         margin-right: 90px;
         margin-top: 5px;
         position: relative;
     }
 }
+/* MENU OFFCANVAS (MOBILE) */
+.offcanvas-header,
+.offcanvas-body {
+  background-color: #efefef;
+}
 
+/* BOTÕES VERTICAIS NO MOBILE */
+.menu-option {
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f1f1f1;
+  color: #333;
+  border: none;
+  width: 100%;
+  padding: 20px 10px;
+  justify-content: flex-start;
+  transition: background-color 0.3s;
+}
+.btn-group-vertical .menu-option {
+  border-radius: 10px !important;
+}
 
+.menu-option img {
+  width: 24px;
+  height: 24px;
+  filter: none;
+  transition: filter 0.3s;
+}
 
+input[type="radio"]:checked + label.menu-option {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+}
+
+input[type="radio"]:checked + label.menu-option img {
+  filter: brightness(0) invert(1);
+}

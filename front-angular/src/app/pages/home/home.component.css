@@ -2,3 +2,161 @@
     position: fixed;
 
 }
+.container-micro-information {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 20px;
+  width: 93%;
+  top: 50px;
+  margin: 0 auto;
+  position: relative;
+
+
+  p{
+    font-size: 20px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.662);
+    position: relative;
+    display: flex;
+    margin-top: 16px;
+    margin-left: -120px;
+    justify-content: flex-end;
+  }
+}
+
+.micro-information-area {
+  display: flex;
+  padding: 60px 0px;
+  margin: 20px 0;
+  background-color: #ededed;
+  border-radius: 10px;
+  width: 24%;
+}
+.micro-information-area {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  margin: 20px 0;
+  background-color: #ededed;
+  border-radius: 10px;
+  width: 24%;
+  gap: 15px;
+}
+
+.img-content-home {
+  width: 60px;
+  height: 60px;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+}
+
+.img-content-home img {
+  width: 70%;
+  height: auto;
+}
+
+.container-micro-information h1 {
+  font-size: 14px;
+  top: -20px;
+  margin-left: 50px;
+  position: relative;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.662);
+  margin: 0;
+}
+#img-table{
+    background-color: rgba(0, 51, 255, 0.656);
+}
+#img-products{
+    background-color: rgba(1, 191, 1, 0.823);
+    margin-right: -40px;
+}
+#img-movement{
+    background-color: rgba(151, 34, 205, 0.579);
+}
+#img-update{
+    background-color: rgba(111, 111, 111, 0.777);
+}
+.img-content-home img {
+  filter: brightness(0) invert(1);
+}
+.consert-registered-products{
+    left: 40px;
+}
+.consert-table-quantity{
+    left: -7px;
+}
+
+.consert-last-update{
+    left: -20px;
+}
+@media (max-width: 968px) {
+  .container-micro-information {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+    justify-content: center;
+    margin: 0 auto;
+    top: -10px;
+    width: 90%;
+    max-width: 500px;
+    gap: 15px;
+  }
+
+  .micro-information-area {
+    margin: 0;
+    padding: 15px 20px;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    background-color: #ededed;
+    border-radius: 10px;
+  }
+
+  .img-content-home {
+    width: 50px;
+    height: 50px;
+    padding: 8px;
+  }
+
+  .img-content-home img {
+    width: 100%;
+    height: auto;
+  }
+  #registered-products h1{
+    margin-left: 40px;
+  }
+  .container-micro-information h1 {
+    font-size: 16px;
+    margin-left: 0;
+    position: static;
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .container-micro-information p {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: rgba(0, 0, 0, 0.7);
+    text-align: right;
+    flex: 1;
+  }
+
+  #login-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+}
+
