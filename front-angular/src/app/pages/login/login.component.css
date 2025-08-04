@@ -1,37 +1,46 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .btn-group.btn-group-equal label.btn {
     width: 50%;
     text-align: center;
   }
+
 .img-aberto {
   width: 18px;
   height: 18px;
 }
+
 .img-fechado {
   width: 18px;
   height: 12px;
 }
+
 .btn-group-equal label.btn {
   width: 50%;
   text-align: center;
 }
-.login-background{
-  top: 0px;
-  position: absolute;
+
+#login-background {
+  flex-grow: 1;
 }
+
 input.form-control {
   border: 2px solid #cccccc;
   box-shadow: none;
 }
+
 .navbar{
-  position: absolute;
   width: 100%;
+  flex-shrink: 0;
 }
+
 h1 {
+  text-align: center;
+  position: relative;
   font-size: 24px;
   font-weight: bold;
-  display: flex;
-  position: absolute;
-  margin-top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
 }
