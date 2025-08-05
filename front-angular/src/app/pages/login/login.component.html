@@ -1,21 +1,20 @@
-
 <nav class="navbar" style="background-color: #ededed; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
-  <div class="container-fluid"> 
-    <a class="navbar-brand" href="#" >
-       <img src="/logoCCB-trans.png" alt="Logo" width="80" height="40" />
+  <div class="container-fluid position-relative"> 
+    <a class="navbar-brand" href="#">
+      <img src="/logoCCB-trans.png" alt="Logo" width="80" height="40" />
     </a>
-        <div class="topbar-text-content d-flex align-items-center">
+    
+    <div class="d-flex align-items-center" 
+         style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
       <div>
-        <h1>Sistema de Estoque</h1>
-        <!--<p>Brás</p>  Somente quando ele fizer login, para puxar o setor dele-->
-      </div>
+        <h1 class="mb-0">Sistema de Estoque</h1> </div>
     </div>
   </div>
 </nav>
 
-<div id="login-background" class="container-fluid d-flex justify-content-center align-items-center " style="background: linear-gradient(to right, #eae9e9, #b0b0b0); height: 100vh;">
-  <div class="card p-5 shadow" style="width: 100%; max-width: 400px; margin-top: -10px; background-color: #f2f2f2; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+<div id="login-background" class="container-fluid d-flex justify-content-center align-items-center" style="background: linear-gradient(to right, #eae9e9, #b0b0b0);">
 
+  <div class="card p-5 shadow" style="width: 100%; max-width: 400px; margin-top: 20px; background-color: #f2f2f2; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
     <div *ngIf="showForm" [@fadeSlide]>
       <ng-container  *ngIf="isLogin; else cadastroTemplate">
         <!-- LOGIN -->
@@ -24,10 +23,11 @@
 
         <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
           <div class="mb-3">
-            <label class="visually-hidden">Email</label>
+            <label>Email</label>
             <input
               type="email"
               class="form-control"
+              placeholder="Digite seu email"
               [(ngModel)]="email"
               name="email"
               required
@@ -43,6 +43,7 @@
               <input
                 [type]="showPassword ? 'text' : 'password'"
                 class="form-control"
+                placeholder="Digite sua senha"
                 [(ngModel)]="senha"
                 name="senha"
                 required
