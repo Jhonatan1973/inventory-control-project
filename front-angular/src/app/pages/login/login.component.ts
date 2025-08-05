@@ -29,7 +29,7 @@ export class LoginComponent implements OnDestroy {
   senha = '';
   showPassword = false;
   isLogin = true;
-
+  rememberMe = false; 
 
   showForm = true;
   waitingApproval = false;
@@ -44,18 +44,20 @@ export class LoginComponent implements OnDestroy {
     this.showPassword = !this.showPassword;
   }
 onSubmit(): void {
-  if (this.isLogin) {
-    this.authService.login(this.email, this.senha).subscribe({
-      next: (res) => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('username', res.username);
-        localStorage.setItem('sectors', res.sectors);
-        localStorage.setItem('role', res.role);
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        console.error('Erro ao fazer login:', err);
-        alert('Email ou senha inválidos');
+    if (this.isLogin) {
+      this.authService.login(this.email, this.senha).subscribe({
+        next: (res) => {
+          const storage = this.rememberMe ? localStorage : sessionStorage;
+          storage.setItem('token', res.token);
+          storage.setItem('username', res.username);
+          storage.setItem('sectors', res.sectors);
+          storage.setItem('role', res.role);
+
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error('Erro ao fazer login:', err);
+          alert('Email ou senha inválidos');
       }
     });
   }

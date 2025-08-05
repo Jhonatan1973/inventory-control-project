@@ -68,6 +68,25 @@
     >
       <img src="menu/setting-icon.png" alt="" /> Configurações
     </label>
+
+<input
+  type="radio"
+  class="btn-check"
+  name="btnradio"
+  id="btnradio4"
+  autocomplete="off"
+  [checked]="currentRoute === '/register'"
+/>
+<label
+  id="label-btnradio4"
+  class="btn"
+  for="btnradio4"
+  (click)="navigateTo('/register')"
+
+>
+  <img src="menu/user-icon.png" alt="" /> Gerenciar
+</label>
+
   </div>
 </div>
 

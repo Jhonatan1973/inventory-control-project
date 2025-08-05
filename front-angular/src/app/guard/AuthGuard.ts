@@ -1,5 +1,5 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
@@ -12,15 +12,27 @@ export class AuthGuard implements CanActivate {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  canActivate(): boolean {
-    if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        return true;
-      }
+canActivate(route: ActivatedRouteSnapshot): boolean {
+  if (isPlatformBrowser(this.platformId)) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigate(['/login']);
+      return false;
     }
 
-    this.router.navigate(['/login']);
-    return false;
+    const userRole = localStorage.getItem('role');
+
+    const attemptedRoute = route.routeConfig?.path;
+    if (attemptedRoute === 'register' && userRole !== 'admin') {
+      this.router.navigate(['/home']);
+      return false;
+    }
+
+    return true;
   }
+
+  this.router.navigate(['/login']);
+  return false;
+}
+
 }

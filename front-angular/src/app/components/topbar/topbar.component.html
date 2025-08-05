@@ -1,4 +1,4 @@
-<nav class="navbar" style="background-color: #ededed; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+<nav class="navbar" style="background-color: #ededed;">
   <div class="container-fluid align-items-center d-flex justify-content-between">
     <a class="navbar-brand" href="/home">
       <img src="/logoCCB-trans.png" alt="Logo" width="80" height="40" />
@@ -26,36 +26,60 @@
       <div class="offcanvas-header" id="offcanvasRightLabel">
         <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      </div>
+    </div>
       <div class="offcanvas-body d-md-none flex-column">
+        <div class="btn-group-vertical" style="display: flex;" role="group" aria-label="Vertical button group">
           <div class="btn-group-vertical" style="display: flex;" role="group" aria-label="Vertical button group">
-                     <div class="btn-group-vertical" style="display: flex;" role="group" aria-label="Vertical button group">
-           <input type="radio" name="navItem" id="navRadio01" hidden checked>
-<label id="label-navRadio01" for="navRadio01" class="btn btn-secondary nav-button">
-  <img src="menu/graphic-icon.png" alt="Ícone"> Visão Geral
+            <input type="radio" name="navItem" id="navRadio01" hidden [checked]="currentRoute === '/home'">
+            <label id="label-navRadio01" for="navRadio01"
+              class="btn btn-secondary nav-button"
+              [class.active]="currentRoute === '/home'"
+              (click)="navigateTo('/home')">
+              <img src="menu/graphic-icon.png" alt="Ícone"> Visão Geral
+            </label>
+
+            <input type="radio" name="navItem" id="navRadio02" hidden [checked]="currentRoute === '/stock'">
+            <label id="label-navRadio02" for="navRadio02"
+              class="btn btn-secondary nav-button"
+              [class.active]="currentRoute === '/stock'"
+              (click)="navigateTo('/stock')">
+              <img src="menu/table-icon.png" alt="Ícone"> Estoque
+            </label>
+
+            <input type="radio" name="navItem" id="navRadio03" hidden [checked]="currentRoute === '/usuario'">
+            <label id="label-navRadio03" for="navRadio03"
+              class="btn btn-secondary nav-button"
+              [class.active]="currentRoute === '/usuario'"
+              (click)="navigateTo('/usuario')">
+              <img src="menu/user-icon.png" alt="Ícone"> Perfil
+            </label>
+
+            <input type="radio" name="navItem" id="navRadio04" hidden [checked]="currentRoute === '/config'">
+            <label id="label-navRadio04" for="navRadio04"
+              class="btn btn-secondary nav-button"
+              [class.active]="currentRoute === '/config'"
+              (click)="navigateTo('/config')">
+              <img src="menu/setting-icon.png" alt="Ícone"> Configurações
+            </label>
+
+<input type="radio" name="navItem" id="navRadio06" hidden />
+<label
+  id="label-navRadio06"
+  for="navRadio06"
+  class="btn btn-secondary nav-button"
+  (click)="navigateTo('/register')"
+>
+  <img src="menu/user-icon.png" alt="Ícone" /> Gerenciar
 </label>
 
-<input type="radio" name="navItem" id="navRadio02" hidden>
-<label id="label-navRadio02" for="navRadio02" class="btn btn-secondary nav-button">
-  <img src="menu/table-icon.png" alt="Ícone"> Estoque
-</label>
 
-<input type="radio" name="navItem" id="navRadio03" hidden>
-<label id="label-navRadio03" for="navRadio03" class="btn btn-secondary nav-button">
-  <img src="menu/user-icon.png" alt="Ícone"> Perfil
-</label>
-
-<input type="radio" name="navItem" id="navRadio04" hidden>
-<label id="label-navRadio04" for="navRadio04" class="btn btn-secondary nav-button">
-  <img src="menu/setting-icon.png" alt="Ícone"> Configurações
-</label>
-
-<input type="radio" name="navItem" id="navRadio05" hidden>
-<label id="label-navRadio05" for="navRadio05" class="btn btn-secondary nav-button">
-  <img src="/topbar/logo-exit.png" alt="Ícone"> Sair
-</label>
-
-        </div>
+            <input type="radio" name="navItem" id="navRadio05" hidden>
+            <label id="label-navRadio05" for="navRadio05"
+              class="btn btn-secondary nav-button"
+              (click)="logout()">
+              <img src="/topbar/logo-exit.png" alt="Ícone"> Sair
+            </label>
+          </div>
         </div>
       </div>
     </div>

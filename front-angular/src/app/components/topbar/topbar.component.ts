@@ -1,19 +1,20 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID, OnInit } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-topbar',
-  imports: [CommonModule],
-  templateUrl: './topbar.component.html',
-  styleUrl: './topbar.component.css',
   standalone: true,
+  imports: [CommonModule, NgIf],
+  templateUrl: './topbar.component.html',
+  styleUrls: ['./topbar.component.css'],
 })
 export class TopbarComponent implements OnInit {
   isLoggedIn = false;
+  isAdmin = false;
   username: string | null = '';
   sectors: string | null = '';
+  currentRoute: string = '';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -22,9 +23,8 @@ export class TopbarComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.router.events.subscribe(event => {
         if (event instanceof NavigationEnd) {
-          this.isLoggedIn = !!localStorage.getItem('token');
-          this.username = localStorage.getItem('username');
-          this.sectors = localStorage.getItem('sectors');
+          this.updateLocalData();
+          this.currentRoute = event.urlAfterRedirects;
         }
       });
     }
@@ -32,9 +32,30 @@ export class TopbarComponent implements OnInit {
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.isLoggedIn = !!localStorage.getItem('token');
-      this.username = localStorage.getItem('username');
-      this.sectors = localStorage.getItem('sectors');
+      this.updateLocalData();
+      this.currentRoute = this.router.url;
+    }
+  }
+
+  updateLocalData() {
+    this.isLoggedIn = !!localStorage.getItem('token');
+    this.username = localStorage.getItem('username');
+    this.sectors = localStorage.getItem('sectors');
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (Array.isArray(payload.roles)) {
+          this.isAdmin = payload.roles.includes('admin');
+        } else {
+          this.isAdmin = payload.role === 'admin';
+        }
+      } catch {
+        this.isAdmin = false;
+      }
+    } else {
+      this.isAdmin = false;
     }
   }
 
@@ -43,7 +64,11 @@ export class TopbarComponent implements OnInit {
       localStorage.removeItem('token');
       localStorage.removeItem('username');
       localStorage.removeItem('sectors');
-      window.location.href = '/login';
+      this.router.navigate(['/login']);
     }
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
   }
 }

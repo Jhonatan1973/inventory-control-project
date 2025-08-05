@@ -61,10 +61,16 @@
             </div>
           </div>
 
-          <div class="form-check mb-4">
-            <input class="form-check-input" type="checkbox" id="checkChecked" checked />
-            <label class="form-check-label" for="checkChecked">Lembrar-me</label>
-          </div>
+<div class="form-check mb-4">
+  <input
+    class="form-check-input"
+    type="checkbox"
+    id="checkChecked"
+    [(ngModel)]="rememberMe"
+    name="rememberMe" />
+  <label class="form-check-label" for="checkChecked">Lembrar-me</label>
+</div>
+
 
           <button type="submit" class="btn btn-secondary w-100" [disabled]="loginForm.invalid">Entrar</button>
 

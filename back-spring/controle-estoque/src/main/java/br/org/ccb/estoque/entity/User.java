@@ -2,7 +2,6 @@ package br.org.ccb.estoque.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -24,5 +23,10 @@ public class User {
     private String role;
 
     private String sectors;
-}
 
+    @Column(name = "online")
+    private Boolean online = false;
+
+    @Column(name = "last_modified")
+    private String lastModified;
+}

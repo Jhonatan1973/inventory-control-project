@@ -1,0 +1,175 @@
+<app-topbar></app-topbar>
+<app-menu-desktop></app-menu-desktop>
+
+<div
+  id="login-background"
+  class="container-fluid d-flex justify-content-center align-items-center"
+  style="background: linear-gradient(to right, #dbdbdb, #dbdbdb); height: 100%; z-index: -1;"
+></div>
+
+<div class="user-management-content">
+  <h1>Gerenciamento de Usuários</h1>
+  <p>Gerencie todos os usuários do sistema</p>
+  <button class="add-user" (click)="openModal()">+ Adicionar</button>
+  <div class="horizontal-line"></div>
+
+  <div class="status-user-content">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Procurar..."
+        [(ngModel)]="searchText"
+      />
+      <button type="button" class="btn btn-outline-secondary" (click)="searchUsers()">
+        Buscar
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <span class="visually-hidden">Filtro</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" (click)="setRoleFilter('user')">User</a></li>
+        <li><a class="dropdown-item" (click)="setRoleFilter('admin')">Admin</a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" (click)="setRoleFilter('Todos')">Todos</a></li>
+      </ul>
+    </div>
+
+    <div class="activity-box">
+      <div class="line-activity" *ngFor="let user of filteredUsers">
+        <div class="user-info">
+          <h3>{{ user.username }}</h3>
+          <p>{{ user.email }}</p>
+        </div>
+        <div class="user-details">
+          <span class="user-role">{{ user.role }}</span>
+         <span class="data-alteracao">
+  Última alteração: {{ formatDateTime(user.lastModified) }}
+</span>
+
+        </div>
+        <div class="user-actions">
+          <button class="change-user" (click)="editUser(user)">
+            <img src="/register/pen-icon.svg" alt="Editar" />
+          </button>
+          <button class="delete-user" (click)="openDeleteModal(user)">
+            <img src="/register/lixeira-icon.svg" alt="Excluir" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="user-activity-conta2nt">
+      <div class="user-activity">
+        <h3>Total de Usuários</h3>
+        <img src="/register/user-multiple.svg" alt="" />
+        <p>{{ totalUsers }}</p>
+      </div>
+    </div>
+  </div>
+<div class="card-add-users-overlay" id="overlay" style="display: none;">
+  <div class="card-add-users">
+    <h2>Novo Usuário</h2>
+    <img
+      src="/register/icon-close.svg"
+      alt="Fechar"
+      class="close-modal"
+      (click)="closeModal()"
+    />
+
+    <p>Nome</p>
+    <input type="text" [(ngModel)]="newUser.username" name="username" />
+
+    <p>Email</p>
+    <input type="text" [(ngModel)]="newUser.email" name="email" />
+
+    <p>Função</p>
+    <select [(ngModel)]="newUser.role" name="role" class="select-roles">
+      <option value="user">Usuário</option>
+      <option value="admin">Administrador</option>
+    </select>
+
+    <p>Senha</p>
+    <input type="text" [(ngModel)]="newUser.password" name="password" />
+
+    <button type="button" (click)="generateRandomPassword()">
+      Gerar Senha Forte
+    </button>
+
+    <button (click)="createUser()">Confirmar</button>
+  </div>
+</div>
+
+
+<div
+  class="card-add-users-overlay"
+  *ngIf="showEditCard && selectedUser"
+  (click)="closeEditCard()"
+>
+  <div class="card-add-users" (click)="$event.stopPropagation()">
+    <h2>Editar Usuário</h2>
+    <p>Nome:</p>
+    <input 
+      type="text" 
+      [(ngModel)]="selectedUser.username" 
+      [readonly]="showConfirm"
+    />
+
+    <p>Email:</p>
+    <input 
+      type="text" 
+      [(ngModel)]="selectedUser.email" 
+      [readonly]="showConfirm"
+    />
+
+    <p>Função:</p>
+    <select [(ngModel)]="selectedUser.role" [disabled]="showConfirm">
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+    <div class="btns-edit" *ngIf="!showConfirm">
+      <button class="btn-salvar" (click)="askForConfirm()">Salvar</button>
+      <button class="btn-cancelar" (click)="closeEditCard()">Cancelar</button>
+    </div>
+    <div class="confirm-modal" *ngIf="showConfirm">
+      <p>Tem certeza que deseja alterar esse usuário?</p>
+      <p><strong>Alterações feitas:</strong></p>
+      <ul>
+        <li *ngIf="selectedUser.username !== originalUser?.username">
+          <strong>Nome:</strong> {{ originalUser?.username }} → {{ selectedUser.username }}
+        </li>
+        <li *ngIf="selectedUser.email !== originalUser?.email">
+          <strong>Email:</strong> {{ originalUser?.email }} → {{ selectedUser.email }}
+        </li>
+        <li *ngIf="selectedUser.role !== originalUser?.role">
+          <strong>Função:</strong> {{ originalUser?.role }} → {{ selectedUser.role }}
+        </li>
+      </ul>
+      <button class="btn-confirm" (click)="confirmSave()">Confirmar</button>
+      <button class="btn-cancel" (click)="cancelSave()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Tem certeza que deseja excluir o usuário?</h3>
+    <p>Digite o nome completo do usuário <strong>"{{ userToDelete?.username }}"</strong> para confirmar a exclusão permanente.</p>
+
+    <input
+      type="text"
+      [(ngModel)]="deleteConfirmationText"
+      placeholder="Digite o nome completo aqui"
+    />
+
+    <div class="modal-buttons">
+      <button [disabled]="deleteConfirmationText !== userToDelete?.username" (click)="confirmDelete()">Confirmar</button>
+      <button (click)="closeDeleteModal()">Cancelar</button>
+    </div>
+  </div>
+</div>

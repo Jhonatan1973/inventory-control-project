@@ -55,7 +55,9 @@ public class AuthController {
             }
 
             User foundUser = userOptional.get();
-            String token = jwtService.generateToken(foundUser.getEmail());
+            foundUser.setOnline(true);
+            repo.save(foundUser);
+            String token = jwtService.generateToken(foundUser.getEmail(), user.getRole());
 
             return ResponseEntity.ok(new JwtResponse(
                     token,
@@ -67,6 +69,26 @@ public class AuthController {
             return ResponseEntity.status(401).body("Email ou senha inválidos.");
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(403).body("Falha na autenticação.");
+        }
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            String email = jwtService.extractEmail(token);
+            Optional<User> userOptional = repo.findByEmail(email);
+
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.status(404).body("Usuário não encontrado.");
+            }
+
+            User foundUser = userOptional.get();
+            foundUser.setOnline(false);
+            repo.save(foundUser);
+
+            return ResponseEntity.ok("Logout realizado com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Erro ao processar logout.");
         }
     }
 
