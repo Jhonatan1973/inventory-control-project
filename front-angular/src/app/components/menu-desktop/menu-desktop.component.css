@@ -12,6 +12,7 @@
   background-color: #ededed;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 222;
 }
 
 .btn-group {

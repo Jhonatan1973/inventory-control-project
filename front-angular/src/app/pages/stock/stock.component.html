@@ -1,3 +1,83 @@
+
 <app-topbar></app-topbar>
-<app-menu-desktop ></app-menu-desktop>
-<div id="login-background" class="container-fluid d-flex justify-content-center align-items-center " style="background: linear-gradient(to right, #dbdbdb, #dbdbdb); height: 100%; z-index: -1;"></div>
+<app-menu-desktop></app-menu-desktop>
+<div id="login-background" class="container-fluid d-flex justify-content-center align-items-center"></div>
+<h2 class="title-page">Gerenciar Estoque</h2>
+
+<div class="top-content">
+<button type="button" class="btn-add" (click)="abrirModal()">+ Adicionar</button>
+
+<p class="quantity-tables">Quantidade de tabelas: {{ tabelasSetor.length }}</p>
+
+<div class="top-line"></div>
+</div>
+<div class="div-content">
+  <div *ngFor="let tabela of tabelasSetor" class="table-information-content">
+    <h1 style="margin-bottom: 10px;">{{ tabela.tableName }}</h1>
+    <p class="description">Descrição: {{ tabela.description }}</p>
+    <p class="quantity" style="margin-bottom: 50px;">Quantidade de itens: {{ tabela.itemCount || 0 }}</p>
+    <div class="line-div-table"></div>
+    <button type="button" class="btn btn-outline-secondary" style="margin-left: -20px;">Entrar</button>
+    <button type="button" class="btn btn-outline-danger">Excluir</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="mostrarModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Criar Nova Tabela</h2>
+      <p>Configure uma nova tabela para organizar seus produtos</p>
+    </div>
+
+<div class="form-group">
+  <label>Nome da Tabela</label>
+  <input
+    type="text"
+    class="uppercase"
+    placeholder="Ex: GELADEIRA"
+    [(ngModel)]="nomeTabela"
+    (ngModelChange)="nomeTabela = nomeTabela.toUpperCase()"
+  />
+</div>
+
+<div class="form-group">
+  <label>Descrição (Opcional)</label>
+  <input
+    type="text"
+    placeholder="Ex: Pratileria A-H"
+    [(ngModel)]="descricaoTabela"
+  />
+</div>
+
+
+    <div class="form-group">
+      <div class="coluna-header">
+        <label>Colunas da Tabela</label>
+        <button class="btn-add-coluna" (click)="adicionarColuna()">+ Adicionar Coluna</button>
+      </div>
+
+      <div *ngFor="let col of colunas; let i = index" class="coluna-item">
+        <input type="text" [(ngModel)]="colunas[i].nome" placeholder="Nome da Coluna" />
+
+        <select [(ngModel)]="colunas[i].tipo">
+          <option value="texto">Texto</option>
+          <option value="número">Número</option>
+          <option value="data">Data</option>
+        </select>
+
+        <label class="obrigatorio">
+          <input type="checkbox" [(ngModel)]="colunas[i].obrigatorio" />
+          Obrigatório
+        </label>
+
+        <button *ngIf="colunas.length > 1" class="btn-remove" (click)="removerColuna(i)">×</button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="fecharModal()">Cancelar</button>
+      <button class="btn-confirmar" (click)="confirmarCriacao()" [disabled]="!isFormValid()">Criar Tabela</button>
+    </div>
+  </div>
+</div>

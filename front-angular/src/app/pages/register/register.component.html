@@ -47,7 +47,7 @@
           <p>{{ user.email }}</p>
         </div>
         <div class="user-details">
-          <span class="user-role">{{ user.role }}</span>
+          <span class="user-role">{{ user.roleName }}</span>
          <span class="data-alteracao">
   Última alteração: {{ formatDateTime(user.lastModified) }}
 </span>
@@ -79,9 +79,7 @@
       src="/register/icon-close.svg"
       alt="Fechar"
       class="close-modal"
-      (click)="closeModal()"
     />
-
     <p>Nome</p>
     <input type="text" [(ngModel)]="newUser.username" name="username" />
 
@@ -89,7 +87,7 @@
     <input type="text" [(ngModel)]="newUser.email" name="email" />
 
     <p>Função</p>
-    <select [(ngModel)]="newUser.role" name="role" class="select-roles">
+    <select [(ngModel)]="newUser.roleName" name="role" class="select-roles">
       <option value="user">Usuário</option>
       <option value="admin">Administrador</option>
     </select>
@@ -104,8 +102,6 @@
     <button (click)="createUser()">Confirmar</button>
   </div>
 </div>
-
-
 <div
   class="card-add-users-overlay"
   *ngIf="showEditCard && selectedUser"
@@ -128,7 +124,7 @@
     />
 
     <p>Função:</p>
-    <select [(ngModel)]="selectedUser.role" [disabled]="showConfirm">
+    <select [(ngModel)]="selectedUser.roleName" [disabled]="showConfirm">
       <option value="user">User</option>
       <option value="admin">Admin</option>
     </select>
@@ -146,8 +142,8 @@
         <li *ngIf="selectedUser.email !== originalUser?.email">
           <strong>Email:</strong> {{ originalUser?.email }} → {{ selectedUser.email }}
         </li>
-        <li *ngIf="selectedUser.role !== originalUser?.role">
-          <strong>Função:</strong> {{ originalUser?.role }} → {{ selectedUser.role }}
+        <li *ngIf="selectedUser.roleName !== originalUser?.roleName">
+          <strong>Função:</strong> {{ originalUser?.roleName }} → {{ selectedUser.roleName }}
         </li>
       </ul>
       <button class="btn-confirm" (click)="confirmSave()">Confirmar</button>
@@ -172,4 +168,13 @@
       <button (click)="closeDeleteModal()">Cancelar</button>
     </div>
   </div>
+</div>
+<div *ngIf="emailPendingConfirmation">
+  <h3>Confirmação de Email</h3>
+  <p>Insira o código enviado para {{ emailPendingConfirmation }}</p>
+  <input type="text" [(ngModel)]="code" placeholder="Código" />
+  <button (click)="confirmCode()" [disabled]="!code">Confirmar Código</button>
+  <p *ngIf="countdown > 0">Código expira em {{ countdown }}s</p>
+  <button (click)="resendCode()" [disabled]="countdown > 0">Reenviar Código</button>
+  <div>{{ message }}</div>
 </div>

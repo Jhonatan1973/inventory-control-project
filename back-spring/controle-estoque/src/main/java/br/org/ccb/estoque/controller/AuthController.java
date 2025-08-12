@@ -1,7 +1,10 @@
 package br.org.ccb.estoque.controller;
 
+import br.org.ccb.estoque.dto.LoginResponseDTO;
+import br.org.ccb.estoque.dto.UserDTO;
 import br.org.ccb.estoque.entity.User;
 import br.org.ccb.estoque.repository.UserRepository;
+import br.org.ccb.estoque.service.EmailService;
 import br.org.ccb.estoque.service.JwtService;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,14 +13,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api")
 public class AuthController {
 
     @Autowired
@@ -30,61 +37,64 @@ public class AuthController {
     private JwtService jwtService;
 
     @Autowired
-    private BCryptPasswordEncoder encoder;
+    private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        if (repo.findByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email já cadastrado");
-        }
-        user.setPassword(encoder.encode(user.getPassword()));
-        repo.save(user);
-        return ResponseEntity.ok("Usuário cadastrado com sucesso!");
-    }
+    @Autowired
+    private EmailService emailService;
 
-    @PostMapping("/login")
+    // --- LOGIN ---
+    @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {
             authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
             );
 
-            Optional<User> userOptional = repo.findByEmail(user.getEmail());
-            if (userOptional.isEmpty()) {
+            Optional<User> userOpt = repo.findByEmail(user.getEmail());
+            if (userOpt.isEmpty()) {
                 return ResponseEntity.status(404).body("Usuário não encontrado.");
             }
 
-            User foundUser = userOptional.get();
+            User foundUser = userOpt.get();
             foundUser.setOnline(true);
             repo.save(foundUser);
-            String token = jwtService.generateToken(foundUser.getEmail(), user.getRole());
 
-            return ResponseEntity.ok(new JwtResponse(
+            // Pega os nomes para usar no token e no DTO
+            String roleName = foundUser.getRole() != null ? foundUser.getRole().getName() : null;
+            String sectorName = foundUser.getSector() != null ? foundUser.getSector().getName() : null;
+
+            String token = jwtService.generateToken(foundUser.getEmail(), roleName);
+
+            LoginResponseDTO response = new LoginResponseDTO(
                     token,
                     foundUser.getUsername(),
-                    foundUser.getSectors(),
-                    foundUser.getRole()
-            ));
-        } catch (BadCredentialsException ex) {
+                    roleName,
+                    sectorName
+            );
+
+            return ResponseEntity.ok(response);
+        } catch (BadCredentialsException e) {
             return ResponseEntity.status(401).body("Email ou senha inválidos.");
-        } catch (AuthenticationException ex) {
+        } catch (Exception e) {
             return ResponseEntity.status(403).body("Falha na autenticação.");
         }
     }
-    @PostMapping("/logout")
+
+    // --- LOGOUT ---
+    @PostMapping("/auth/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
         try {
             String token = authHeader.replace("Bearer ", "");
             String email = jwtService.extractEmail(token);
-            Optional<User> userOptional = repo.findByEmail(email);
+            Optional<User> userOpt = repo.findByEmail(email);
 
-            if (userOptional.isEmpty()) {
+            if (userOpt.isEmpty()) {
                 return ResponseEntity.status(404).body("Usuário não encontrado.");
             }
 
-            User foundUser = userOptional.get();
-            foundUser.setOnline(false);
-            repo.save(foundUser);
+            User user = userOpt.get();
+            user.setOnline(false);
+            repo.save(user);
 
             return ResponseEntity.ok("Logout realizado com sucesso.");
         } catch (Exception e) {
@@ -92,18 +102,191 @@ public class AuthController {
         }
     }
 
+    // --- ENVIA CÓDIGO DE VERIFICAÇÃO POR EMAIL ---
+    @PostMapping("/auth/sendVerificationCode")
+    public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.badRequest().body("E-mail obrigatório");
+        }
+        emailService.sendVerificationEmail(email);
+        return ResponseEntity.ok("Código enviado");
+    }
+
+    // --- VERIFICA CÓDIGO DE CONFIRMAÇÃO ---
+    @PostMapping("/auth/verifyCode")
+    public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String token = body.get("token");
+        if (email == null || token == null) {
+            return ResponseEntity.badRequest().body("Email e token obrigatórios");
+        }
+        boolean valid = emailService.verifyToken(email, token);
+        return valid
+                ? ResponseEntity.ok("Código válido")
+                : ResponseEntity.status(401).body("Código inválido ou expirado");
+    }
+
+    // --- CONFIRMA USUÁRIO (APÓS VERIFICAÇÃO) E ENVIA LINK PARA REDEFINIÇÃO DE SENHA ---
+    @PostMapping("/auth/confirmUser")
+    public ResponseEntity<?> confirmUser(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String token = body.get("token");
+
+        if (email == null || token == null) {
+            return ResponseEntity.badRequest().body("Email e token obrigatórios");
+        }
+
+        boolean valid = emailService.verifyToken(email, token);
+        if (!valid) {
+            return ResponseEntity.status(401).body("Código inválido ou expirado");
+        }
+
+        Optional<User> userOpt = repo.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("Usuário não encontrado.");
+        }
+
+        User user = userOpt.get();
+        user.setConfirmed(true);
+        repo.save(user);
+
+        String resetToken = UUID.randomUUID().toString();
+        String resetLink = "http://localhost:4200/reset-password?token=" + resetToken;
+        emailService.sendPasswordResetEmail(email, resetLink);
+
+        return ResponseEntity.ok("Usuário confirmado e email para redefinir senha enviado");
+    }
+
+    // --- CRIA NOVO USUÁRIO (SOMENTE ADMIN PODE) ---
+    @PostMapping("/users")
+    public ResponseEntity<?> createUser(@RequestBody User newUser) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String creatorEmail = auth.getName();
+
+        Optional<User> creatorOpt = repo.findByEmail(creatorEmail);
+        if (creatorOpt.isEmpty()) {
+            return ResponseEntity.status(403).body("Usuário não autenticado");
+        }
+        User creator = creatorOpt.get();
+
+        // Apenas admin pode criar usuários
+        if (!"ADMIN".equalsIgnoreCase(String.valueOf(creator.getRole()))) {
+            return ResponseEntity.status(403).body("Apenas ADMIN pode criar novos usuários");
+        }
+
+        // Verifica campos obrigatórios
+        if (newUser.getUsername() == null || newUser.getEmail() == null || newUser.getRole() == null || newUser.getPassword() == null) {
+            return ResponseEntity.badRequest().body("Campos obrigatórios faltando");
+        }
+
+        // Verifica email duplicado
+        if (repo.findByEmail(newUser.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email já cadastrado");
+        }
+
+        // Criptografa senha e define setor igual ao admin que criou
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.setSector(creator.getSector());
+        newUser.setId(null);
+        newUser.setLastModified(null);
+        newUser.setOnline(false);
+        newUser.setConfirmed(false); // precisa confirmar pelo código
+
+        User savedUser = repo.save(newUser);
+
+        // Envia email com código de verificação para o novo usuário
+        emailService.sendVerificationEmail(savedUser.getEmail());
+
+        return ResponseEntity.ok(Map.of("message", "Usuário criado com sucesso. Um código foi enviado para o email para confirmação."));
+    }
+
+    // --- ATUALIZA USUÁRIO ---
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        Optional<User> existingUserOpt = repo.findById(id);
+        if (existingUserOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        User existingUser = existingUserOpt.get();
+
+        if (updatedUser.getUsername() != null) {
+            existingUser.setUsername(updatedUser.getUsername());
+        }
+        if (updatedUser.getEmail() != null) {
+            existingUser.setEmail(updatedUser.getEmail());
+        }
+        if (updatedUser.getRole() != null) {
+            existingUser.setRole(updatedUser.getRole());
+        }
+        if (updatedUser.getSector() != null) {
+            existingUser.setSector(updatedUser.getSector());
+        }
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+
+        User savedUser = repo.save(existingUser);
+        return ResponseEntity.ok(savedUser);
+    }
+
+    // --- DELETA USUÁRIO (SOMENTE ADMIN PODE) ---
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String requesterEmail = auth.getName();
+
+        Optional<User> requesterOpt = repo.findByEmail(requesterEmail);
+        if (requesterOpt.isEmpty()) {
+            return ResponseEntity.status(403).body("Usuário não autenticado");
+        }
+        User requester = requesterOpt.get();
+
+        if (!"ADMIN".equalsIgnoreCase(String.valueOf(requester.getRole()))) {
+            return ResponseEntity.status(403).body("Apenas ADMIN pode deletar usuários");
+        }
+
+        Optional<User> userOpt = repo.findById(id);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body("Usuário não encontrado");
+        }
+
+        repo.deleteById(id);
+        return ResponseEntity.ok("Usuário deletado com sucesso");
+    }
+
+    // --- LISTA USUÁRIOS DO MESMO SETOR ---
+    @GetMapping("/users")
+    public ResponseEntity<?> getUsersBySector() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        Optional<User> userOpt = repo.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("Usuário não autenticado");
+        }
+
+        User loggedUser = userOpt.get();
+
+        // Busca lista de usuários do mesmo setor
+        List<UserDTO> usersSameSector = repo.findUsersBySectorId(loggedUser.getSectorId());
+
+        return ResponseEntity.ok(usersSameSector);
+    }
+
+    // --- RESPONSE JWT ---
     @Setter
     @Getter
     public static class JwtResponse {
         private String token;
         private String username;
-        private String sectors;
-        private String role;
+        private Long sector;
+        private Long role;
 
-        public JwtResponse(String token, String username, String sectors, String role) {
+        public JwtResponse(String token, String username, Long sector, Long role) {
             this.token = token;
             this.username = username;
-            this.sectors = sectors;
+            this.sector = sector;
             this.role = role;
         }
     }

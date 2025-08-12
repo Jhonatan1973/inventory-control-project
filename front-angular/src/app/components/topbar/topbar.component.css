@@ -4,6 +4,7 @@ h1{
     display: flex;
     position: absolute;
     margin-top: -15px;
+    margin-left: -100px;
 }
 .topbar-text-content{
     font-size: 20px;

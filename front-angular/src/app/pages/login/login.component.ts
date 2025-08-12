@@ -47,11 +47,11 @@ onSubmit(): void {
     if (this.isLogin) {
       this.authService.login(this.email, this.senha).subscribe({
         next: (res) => {
-          const storage = this.rememberMe ? localStorage : sessionStorage;
+          const storage = localStorage;
           storage.setItem('token', res.token);
           storage.setItem('username', res.username);
-          storage.setItem('sectors', res.sectors);
-          storage.setItem('role', res.role);
+          storage.setItem('sector', res.sectorName);
+          storage.setItem('role', res.roleName);
 
           this.router.navigate(['/home']);
         },

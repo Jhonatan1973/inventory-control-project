@@ -12,7 +12,7 @@ import { Router, NavigationEnd } from '@angular/router';
   standalone: true,
 })
 export class HomeComponent implements OnInit {
-  sectors: string | null = '';
+  sectorName: string | null = '';
   role: string | null = '';
   isLoggedIn = false;
 
@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
         if (event instanceof NavigationEnd) {
           this.isLoggedIn = !!localStorage.getItem('token');
           this.role = localStorage.getItem('role');
-          this.sectors = localStorage.getItem('sectors');
+          this.sectorName = localStorage.getItem('sector');
         }
       });
     }
@@ -35,17 +35,17 @@ export class HomeComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.isLoggedIn = !!localStorage.getItem('token');
       this.role = localStorage.getItem('role');
-      this.sectors = localStorage.getItem('sectors');
+      this.sectorName = localStorage.getItem('sector');
       console.log(this.role );
-      console.log(this.sectors);
+      console.log(this.sectorName);
     }
   }
 
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');
-      localStorage.removeItem('role');
-      localStorage.removeItem('sectors');
+      localStorage.removeItem('roleName');
+      localStorage.removeItem('sectorName');
       window.location.href = '/login';
     }
   }

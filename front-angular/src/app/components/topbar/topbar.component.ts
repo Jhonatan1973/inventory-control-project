@@ -13,7 +13,7 @@ export class TopbarComponent implements OnInit {
   isLoggedIn = false;
   isAdmin = false;
   username: string | null = '';
-  sectors: string | null = '';
+  sector: string | null = '';
   currentRoute: string = '';
 
   constructor(
@@ -40,7 +40,7 @@ export class TopbarComponent implements OnInit {
   updateLocalData() {
     this.isLoggedIn = !!localStorage.getItem('token');
     this.username = localStorage.getItem('username');
-    this.sectors = localStorage.getItem('sectors');
+    this.sector = localStorage.getItem('sector');
 
     const token = localStorage.getItem('token');
     if (token) {
@@ -63,7 +63,7 @@ export class TopbarComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');
       localStorage.removeItem('username');
-      localStorage.removeItem('sectors');
+      localStorage.removeItem('sector');
       this.router.navigate(['/login']);
     }
   }

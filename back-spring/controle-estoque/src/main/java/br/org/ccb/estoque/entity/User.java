@@ -8,6 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
+    @Column(name = "confirmed")
+    private Boolean confirmed = false;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +22,19 @@ public class User {
 
     private String password;
 
-    private String role;
+    @Column(name = "role_id")
+    private Long roleId;
 
-    private String sectors;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+    private Role role;
+
+    @Column(name = "sector_id")
+    private Long sectorId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "sector_id", insertable = false, updatable = false)
+    private Sector sector;
 
     @Column(name = "online")
     private Boolean online = false;

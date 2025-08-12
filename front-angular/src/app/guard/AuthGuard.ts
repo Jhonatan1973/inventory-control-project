@@ -11,7 +11,6 @@ export class AuthGuard implements CanActivate {
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
-
 canActivate(route: ActivatedRouteSnapshot): boolean {
   if (isPlatformBrowser(this.platformId)) {
     const token = localStorage.getItem('token');
@@ -19,20 +18,15 @@ canActivate(route: ActivatedRouteSnapshot): boolean {
       this.router.navigate(['/login']);
       return false;
     }
-
     const userRole = localStorage.getItem('role');
-
     const attemptedRoute = route.routeConfig?.path;
-    if (attemptedRoute === 'register' && userRole !== 'admin') {
+    if (attemptedRoute === 'register' && userRole !== 'ADMIN') {
       this.router.navigate(['/home']);
       return false;
     }
-
     return true;
   }
-
   this.router.navigate(['/login']);
   return false;
 }
-
 }

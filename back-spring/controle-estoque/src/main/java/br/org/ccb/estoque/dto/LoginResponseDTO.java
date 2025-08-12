@@ -3,19 +3,18 @@ package br.org.ccb.estoque.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 public class LoginResponseDTO {
     private String token;
     private String username;
-    private String sectors;
-    private String role;
+    private String roleName;   // nome da role
+    private String sectorName; // nome do setor
 
-    public LoginResponseDTO(String token, String username, String sectors, String role) {
+    public LoginResponseDTO(String token, String username, String roleName, String sectorName) {
         this.token = token;
         this.username = username;
-        this.sectors = sectors;
-        this.role = role;
+        this.roleName = roleName;
+        this.sectorName = sectorName;
     }
-
 }

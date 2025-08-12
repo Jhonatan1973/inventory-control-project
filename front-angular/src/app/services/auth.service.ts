@@ -4,13 +4,13 @@ import { Injectable } from '@angular/core';
 export interface LoginResponse {
   token: string;
   username: string;
-  sectors: string;
-  role: string;
+  sectorName: string;
+  roleName: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private API_URL = 'http://localhost:9090/auth/login';
+  private API_URL = 'http://localhost:9090/api/auth/login';
 
   constructor(private http: HttpClient) {}
 
