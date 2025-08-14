@@ -34,7 +34,6 @@ public class EmailService {
         message.setText("Olá! Seu código para confirmar seu e-mail é: " + token);
         mailSender.send(message);
     }
-
     public void sendPasswordResetEmail(String email, String resetLink) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("jhonatandomingues1122@outlook.com");
@@ -43,7 +42,6 @@ public class EmailService {
         message.setText("Olá! Para redefinir sua senha, clique no link abaixo:\n" + resetLink);
         mailSender.send(message);
     }
-
     public boolean verifyToken(String email, String token) {
         Optional<EmailVerificationToken> evTokenOpt = tokenRepo.findByEmailAndToken(email, token);
         if (evTokenOpt.isPresent()) {
@@ -55,7 +53,6 @@ public class EmailService {
         }
         return false;
     }
-
     private String generateRandomToken() {
         int token = (int)(Math.random() * 900000) + 100000;
         return String.valueOf(token);

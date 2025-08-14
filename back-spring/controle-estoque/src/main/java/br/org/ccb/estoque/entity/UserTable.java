@@ -1,7 +1,11 @@
 package br.org.ccb.estoque.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -30,8 +34,9 @@ public class UserTable {
     @Column(name = "description_table")
     private String description;
 
-    @Column(name = "columns_structure", columnDefinition = "jsonb")
-    private String columnsStructure;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "columns_structure")
+    private JsonNode columnsStructure;
 
     @Column(name = "quantity_items")
     private Integer quantityItems;

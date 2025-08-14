@@ -21,7 +21,7 @@ public class JwtService {
 
     public String generateToken(String email, String role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role); // adiciona a role no payload
+        claims.put("role", role);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -31,7 +31,6 @@ public class JwtService {
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
-
     public String extractEmail(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)
@@ -39,7 +38,6 @@ public class JwtService {
                 .getBody()
                 .getSubject();
     }
-
     public String extractRole(String token) {
         return (String) Jwts.parser()
                 .setSigningKey(secret)
@@ -47,7 +45,6 @@ public class JwtService {
                 .getBody()
                 .get("role");
     }
-
     public boolean isTokenValid(String token) {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(token);

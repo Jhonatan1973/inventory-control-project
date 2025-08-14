@@ -8,8 +8,8 @@ import lombok.Setter;
 public class LoginResponseDTO {
     private String token;
     private String username;
-    private String roleName;   // nome da role
-    private String sectorName; // nome do setor
+    private String roleName;
+    private String sectorName;
 
     public LoginResponseDTO(String token, String username, String roleName, String sectorName) {
         this.token = token;

@@ -13,7 +13,6 @@ public class AdminController {
     public AdminController(UserService userService) {
         this.userService = userService;
     }
-
     @PostMapping("/create-user")
     public User createUser(@RequestParam String username,
                            @RequestParam String email,

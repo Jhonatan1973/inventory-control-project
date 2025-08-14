@@ -12,6 +12,6 @@ public class UserTableDTO {
     private String tableName;
     private String description;
     private LocalDateTime createdAt;
-    private int quantityItems; // se for calculado ou buscar em outro lugar
+    private int quantityItems;
 
 }

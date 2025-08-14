@@ -250,3 +250,124 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
+
+.modal-detalhes-tabela {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-detalhes-tabela.show {
+  display: flex;
+}
+
+.modal-detalhes-tabela-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 90%;
+  width: 600px; /* maior largura para planilha */
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.topbar {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Colunas */
+.table-schema-container {
+  background-color: #f0f0f5;
+  padding: 10px;
+  border-radius: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.table-schema-container > div {
+  display: inline-block;
+  background-color: #e0e0ea;
+  padding: 8px 12px;
+  margin: 4px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  vertical-align: middle;
+}
+
+/* Itens em formato planilha */
+.table-items-container {
+  margin-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.table-items-container table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 400px;
+}
+
+.table-items-container th,
+.table-items-container td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.table-items-container th {
+  background-color: #f2f2f2;
+  font-weight: 600;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-open-add-products {
+  position: relative;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  border: none;
+  border-color: #111827;
+  background: transparent;
+  cursor: pointer;
+  color: #333;
+}
+.sidebar-produtos {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 320px;
+  height: 100%;
+  background: #f8f8f8;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  padding: 20px;
+  overflow-y: auto;
+  transition: right 0.3s ease;
+  z-index: 10200;
+}
+
+.sidebar-produtos.show {
+  right: 0;
+}
+
+.produto-item {
+  margin-bottom: 10px;
+}

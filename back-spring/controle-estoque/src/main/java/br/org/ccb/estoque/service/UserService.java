@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                List.of(() -> roleName) // roleName ex: "admin"
+                List.of(() -> roleName)
         );
     }
 
@@ -48,13 +48,9 @@ public class UserService implements UserDetailsService {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-
-        // Buscar Role pelo nome
         Role role = roleRepo.findByName(roleName)
                 .orElseThrow(() -> new RuntimeException("Role não encontrado: " + roleName));
         user.setRole(role);
-
-        // Buscar Sector pelo nome
         Sector sector = sectorRepo.findByName(sectorName)
                 .orElseThrow(() -> new RuntimeException("Sector não encontrado: " + sectorName));
         user.setSector(sector);

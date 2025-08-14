@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit {
 loadUsers() {
   this.userService.getUsersBySector().subscribe({
     next: (data) => {
-      console.log('Dados recebidos:', data);  // <--- veja aqui o que vem
+      console.log('Dados recebidos:', data);
       this.users = data;
       this.filteredUsers = [...this.users];
       this.totalUsers = this.users.length;
