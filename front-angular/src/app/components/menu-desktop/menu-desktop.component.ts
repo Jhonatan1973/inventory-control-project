@@ -18,9 +18,7 @@ export class MenuDesktopComponent implements OnInit {
 
   ngOnInit() {
     this.checkAdminRole();
-
     this.currentRoute = this.router.url;
-
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -28,7 +26,6 @@ export class MenuDesktopComponent implements OnInit {
         this.checkAdminRole();
       });
   }
-
 checkAdminRole() {
   const token = localStorage.getItem('token') || sessionStorage.getItem('token');
   if (token) {
@@ -39,19 +36,16 @@ checkAdminRole() {
       } else {
         this.isAdmin = payload.role === 'admin';
       }
-      console.log('Token válido, isAdmin:', this.isAdmin, 'payload:', payload);
     } catch (e) {
       this.isAdmin = false;
-      console.log('Erro ao analisar token:', e);
+      console.error('Erro ao analisar token:', e);
     }
   } else {
     this.isAdmin = false;
-    console.log('Token não encontrado');
+    console.error('Token não encontrado');
   }
 }
-
-
-  navigateTo(page: string) {
+navigateTo(page: string) {
     if (page) {
       this.router.navigateByUrl(page);
       this.currentRoute = page;

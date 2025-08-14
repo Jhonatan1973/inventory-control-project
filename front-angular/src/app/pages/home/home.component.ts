@@ -30,17 +30,13 @@ export class HomeComponent implements OnInit {
       });
     }
   }
-
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.isLoggedIn = !!localStorage.getItem('token');
       this.role = localStorage.getItem('role');
       this.sectorName = localStorage.getItem('sector');
-      console.log(this.role );
-      console.log(this.sectorName);
     }
   }
-
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');

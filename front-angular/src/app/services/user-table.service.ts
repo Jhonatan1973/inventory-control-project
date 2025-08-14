@@ -1,17 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProdutoInTable } from '../interfaces/product-in-table';
-
-export interface CreateUserTableRequest {
-  tableName: string;
-  description: string;
-  columnsJson: string;
-}
-export interface ProductBase {
-  id: number;
-  name: string;
-}
+import { ProdutoInTable } from '../interfaces/user-table/product-in-table';
+import { CreateUserTableRequest } from '../interfaces/user-table/create-user-table-request';
+import { ProductBase } from '../interfaces/user-table/product-base';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +11,7 @@ export interface ProductBase {
 export class UserTableService {
   private API_URL_CREATE = 'http://localhost:9090/api/user-tables/create';
   private API_URL_BY_SECTOR = 'http://localhost:9090/api/user-tables/by-sector';
+  private API_URL_GET_PRODBASE = 'http://localhost:9090/api/products-base';
 
   constructor(private http: HttpClient) {}
 
@@ -35,8 +28,7 @@ export class UserTableService {
     return this.http.get<any[]>(this.API_URL_BY_SECTOR, { headers: this.getAuthHeaders() });
   }
   getProductsBase(): Observable<ProductBase[]> {
-  const url = 'http://localhost:9090/api/products-base';
-  return this.http.get<ProductBase[]>(url, { headers: this.getAuthHeaders() });
+  return this.http.get<ProductBase[]>(this.API_URL_GET_PRODBASE, { headers: this.getAuthHeaders() });
   }
   salvarProdutosNaTabela(tabelaId: number, produtos: ProdutoInTable[]): Observable<any> {
     const url = `http://localhost:9090/api/user-tables/${tabelaId}/produtos`;

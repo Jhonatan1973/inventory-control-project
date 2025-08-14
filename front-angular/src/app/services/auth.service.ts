@@ -1,12 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-export interface LoginResponse {
-  token: string;
-  username: string;
-  sectorName: string;
-  roleName: string;
-}
+import { LoginResponse } from '../interfaces/auth/login-response';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

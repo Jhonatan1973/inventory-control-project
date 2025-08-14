@@ -29,19 +29,16 @@ export class TopbarComponent implements OnInit {
       });
     }
   }
-
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.updateLocalData();
       this.currentRoute = this.router.url;
     }
   }
-
   updateLocalData() {
     this.isLoggedIn = !!localStorage.getItem('token');
     this.username = localStorage.getItem('username');
     this.sector = localStorage.getItem('sector');
-
     const token = localStorage.getItem('token');
     if (token) {
       try {
@@ -58,7 +55,6 @@ export class TopbarComponent implements OnInit {
       this.isAdmin = false;
     }
   }
-
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');
@@ -67,7 +63,6 @@ export class TopbarComponent implements OnInit {
       this.router.navigate(['/login']);
     }
   }
-
   navigateTo(path: string) {
     this.router.navigate([path]);
   }

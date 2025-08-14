@@ -52,8 +52,6 @@ onSubmit(): void {
           storage.setItem('username', res.username);
           storage.setItem('sector', res.sectorName);
           storage.setItem('role', res.roleName);
-          console.log(res.token);
-
           this.router.navigate(['/home']);
         },
         error: (err) => {

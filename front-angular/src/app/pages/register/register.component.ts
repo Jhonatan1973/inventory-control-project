@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService, User } from '../../services/user.service';
+import { UserService } from '../../services/user.service';
+import { UserInterface } from '../../interfaces/user/user-interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TopbarComponent } from '../../components/topbar/topbar.component';
@@ -13,18 +14,18 @@ import { MenuDesktopComponent } from '../../components/menu-desktop/menu-desktop
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-  users: User[] = [];
-  filteredUsers: User[] = [];
+  users: UserInterface[] = [];
+  filteredUsers: UserInterface[] = [];
   totalUsers = 0;
   searchText = '';
   selectedRole: 'Todos' | string = 'Todos';
-  selectedUser: User | null = null;
+  selectedUser: UserInterface | null = null;
   showEditCard = false;
   showDeleteModal = false;
-  userToDelete: User | null = null;
+  userToDelete: UserInterface | null = null;
   deleteConfirmationText = '';
-  newUser: User = this.getEmptyUser();
-  originalUser: User | null = null;
+  newUser: UserInterface = this.getEmptyUser();
+  originalUser: UserInterface | null = null;
   showConfirm = false;
   code = '';
   countdown = 60;
@@ -41,7 +42,6 @@ export class RegisterComponent implements OnInit {
 loadUsers() {
   this.userService.getUsersBySector().subscribe({
     next: (data) => {
-      console.log('Dados recebidos:', data);
       this.users = data;
       this.filteredUsers = [...this.users];
       this.totalUsers = this.users.length;
@@ -52,7 +52,7 @@ loadUsers() {
   });
 }
 
-  getEmptyUser(): User {
+  getEmptyUser(): UserInterface {
     return {
       id: 0,
       username: '',
@@ -156,7 +156,7 @@ loadUsers() {
     const overlay = document.getElementById('overlay');
     if (overlay) overlay.style.display = 'none';
   }
-  editUser(user: User) {
+  editUser(user: UserInterface) {
     this.selectedUser = { ...user };
     this.originalUser = { ...user };
     this.showEditCard = true;
@@ -204,7 +204,7 @@ loadUsers() {
   cancelSave() {
     this.showConfirm = false;
   }
-  openDeleteModal(user: User) {
+  openDeleteModal(user: UserInterface) {
     this.userToDelete = user;
     this.deleteConfirmationText = '';
     this.showDeleteModal = true;
@@ -252,7 +252,6 @@ loadUsers() {
     const year = brasiliaDate.getFullYear();
     const hours = String(brasiliaDate.getHours()).padStart(2, '0');
     const minutes = String(brasiliaDate.getMinutes()).padStart(2, '0');
-
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   }
 }

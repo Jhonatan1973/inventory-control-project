@@ -1,22 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-
-
-export interface User {
-  id?: number;
-  username?: string;
-  email?: string;
-  password?: string;
-  roleId?: number;
-  sectorId?: number;  
-  sectorName: string;
-  roleName: string;
-  lastModified?: string;
-  online?: boolean;
-  confirmed?: boolean;
-}
+import { UserInterface } from '../interfaces/user/user-interface';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +22,7 @@ export class UserService {
   logout(): Observable<string> {
     return this.http.post<string>(`${this.AUTH_URL}/logout`, {}, { headers: this.getAuthHeaders() });
   }
-  createUser(user: Partial<User>): Observable<User> {
+  createUser(user: Partial<UserInterface>): Observable<UserInterface> {
     const payload = {
       username: user.username,
       email: user.email,
@@ -45,29 +30,25 @@ export class UserService {
       roleId: user.roleId,
       sectorId: user.sectorId || null,
     };
-    return this.http.post<User>(this.API_URL, payload, { headers: this.getAuthHeaders() });
+    return this.http.post<UserInterface>(this.API_URL, payload, { headers: this.getAuthHeaders() });
   }
-sendVerificationCode(email: string): Observable<any> {
-  return this.http.post<any>(`${this.AUTH_URL}/sendVerificationCode`, { email });
-}
+  sendVerificationCode(email: string): Observable<any> {
+    return this.http.post<any>(`${this.AUTH_URL}/sendVerificationCode`, { email });
+  }
 
-verifyCode(email: string, token: string): Observable<any> {
-  return this.http.post<any>(`${this.AUTH_URL}/verifyCode`, { email, token });
-}
+  verifyCode(email: string, token: string): Observable<any> {
+    return this.http.post<any>(`${this.AUTH_URL}/verifyCode`, { email, token });
+  }
 
-confirmUser(email: string, token: string): Observable<any> {
-  return this.http.post<any>(`${this.AUTH_URL}/confirmUser`, { email, token });
-}
-
-  // Atualizar usuário (PUT /users/{id})
-  updateUser(user: User): Observable<User> {
+  confirmUser(email: string, token: string): Observable<any> {
+    return this.http.post<any>(`${this.AUTH_URL}/confirmUser`, { email, token });
+  }
+  updateUser(user: UserInterface): Observable<UserInterface> {
     if (!user.id) throw new Error('User id is required for update');
-    return this.http.put<User>(`${this.API_URL}/${user.id}`, user, { headers: this.getAuthHeaders() });
+    return this.http.put<UserInterface>(`${this.API_URL}/${user.id}`, user, { headers: this.getAuthHeaders() });
   }
-
-  // Listar usuários do mesmo setor (GET /users com token)
-  getUsersBySector(): Observable<User[]> {
-    return this.http.get<User[]>(this.API_URL, { headers: this.getAuthHeaders() });
+  getUsersBySector(): Observable<UserInterface[]> {
+    return this.http.get<UserInterface[]>(this.API_URL, { headers: this.getAuthHeaders() });
   }
   deleteUser(id: number): Observable<any> {
   return this.http.delete(`${this.API_URL}/${id}`, { headers: this.getAuthHeaders() });

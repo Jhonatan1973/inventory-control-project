@@ -14,20 +14,17 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   z-index: 222;
 }
-
 .btn-group {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 5px;
 }
-
 .btn-group .btn {
   white-space: nowrap;
   padding: 4px 12px;
   font-size: 14px;
 }
-
 #label-btnradio1 {
   margin-left: -37px;
   padding: 5px 40px;
@@ -37,7 +34,6 @@
   color: #000000;
   background-color: transparent;
 }
-
 #btnradio1:checked + #label-btnradio1 {
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
@@ -81,7 +77,6 @@
 input[type="radio"]:checked + label img {
   filter: brightness(0) invert(1);
 }
-
 img{
     width: 20px;
     height: 20px;

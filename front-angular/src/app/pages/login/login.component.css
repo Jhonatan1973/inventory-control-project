@@ -3,41 +3,33 @@
   flex-direction: column;
   height: 100vh;
 }
-
 .btn-group.btn-group-equal label.btn {
     width: 50%;
     text-align: center;
   }
-
 .img-aberto {
   width: 18px;
   height: 18px;
 }
-
 .img-fechado {
   width: 18px;
   height: 12px;
 }
-
 .btn-group-equal label.btn {
   width: 50%;
   text-align: center;
 }
-
 #login-background {
   flex-grow: 1;
 }
-
 input.form-control {
   border: 2px solid #cccccc;
   box-shadow: none;
 }
-
 .navbar{
   width: 100%;
   flex-shrink: 0;
 }
-
 h1 {
   text-align: center;
   position: relative;

@@ -25,7 +25,6 @@
   border-color: transparent;
   z-index: 3;
 }
-
 .div-content {
   position: relative; 
   margin-top: 100px;
@@ -35,7 +34,6 @@
   justify-content: flex-start;
   padding-left: 70px;
 }
-
 .top-line {
   padding: 0.5px 10px;
   background-color: black;
@@ -45,7 +43,6 @@
   margin-right: 70px;
   margin-bottom: -100px;
 }
-
 .table-information-content {
   background-color: #fff;
   border-radius: 20px;
@@ -57,18 +54,15 @@
   font-family: 'Segoe UI', sans-serif;
   transition: all 0.3s ease;
 }
-
 .table-information-content h1 {
   font-size: 30px;
   margin-top: -10px;
   margin-left: 0;
 }
-
 .table-information-content p {
   margin-bottom: 2px;
   margin-left: 0;
 }
-
 .line-div-table {
   padding: 0.5px 120px;
   margin-left: 0;
@@ -76,11 +70,9 @@
   background-color: black;
   margin-bottom: 10px;
 }
-
 .table-information-content button {
   margin-left: 10px;
 }
-
 @media (min-width: 1069px) {
   .title-page {
     display: none;
@@ -92,7 +84,6 @@
     margin-bottom: 60px;
   }
 }
-
 @media (max-width: 960px) {
   .div-content{
    margin-right: 100px;
@@ -120,7 +111,6 @@
     position: relative;
   }
 }
-
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -131,7 +121,6 @@
   align-items: center;
   z-index: 999;
 }
-
 .modal-box {
   background: #fff;
   padding: 30px;
@@ -142,37 +131,30 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   font-family: 'Segoe UI', sans-serif;
 }
-
 .modal-header {
   display: block;
 }
-
 .modal-header h2 {
   margin: 0;
   font-size: 22px;
 }
-
 .modal-header p {
   color: #6c757d;
   font-size: 14px;
   margin-top: 5px;
 }
-
 .form-group {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
 }
-
 .form-group label {
   font-weight: bold;
   margin-bottom: 5px;
 }
-
 .form-group input.uppercase {
   text-transform: uppercase;
 }
-
 .form-group input,
 .form-group select {
   padding: 10px;
@@ -180,13 +162,11 @@
   border: 1px solid #ccc;
   margin-bottom: 15px;
 }
-
 .coluna-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .btn-add-coluna {
   background: #111827;
   padding: 5px 10px;
@@ -197,28 +177,23 @@
   color: #ccc;
   margin-bottom: 20px;
 }
-
 .coluna-item {
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
   align-items: center;
 }
-
 .coluna-item input {
   flex: 2;
 }
-
 .coluna-item select {
   flex: 1;
 }
-
 .obrigatorio {
   display: flex;
   align-items: center;
   gap: 5px;
 }
-
 .btn-remove {
   background: transparent;
   border: none;
@@ -226,14 +201,12 @@
   color: crimson;
   cursor: pointer;
 }
-
 .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
 }
-
 .btn-cancelar {
   background: #f1f1f1;
   padding: 10px 20px;
@@ -241,7 +214,6 @@
   border-radius: 6px;
   cursor: pointer;
 }
-
 .btn-confirmar {
   background: #111827;
   color: white;
@@ -250,8 +222,6 @@
   border-radius: 6px;
   cursor: pointer;
 }
-
-
 .modal-detalhes-tabela {
   display: none;
   position: fixed;
@@ -261,21 +231,18 @@
   align-items: center;
   z-index: 9999;
 }
-
 .modal-detalhes-tabela.show {
   display: flex;
 }
-
 .modal-detalhes-tabela-content {
   background: white;
   padding: 20px;
   border-radius: 10px;
   max-width: 90%;
-  width: 600px; /* maior largura para planilha */
+  width: 600px;
   max-height: 80vh;
   overflow-y: auto;
 }
-
 .topbar {
   margin-top: 20px;
   margin-bottom: 8px;
@@ -283,8 +250,6 @@
   font-size: 16px;
   color: #333;
 }
-
-/* Colunas */
 .table-schema-container {
   background-color: #f0f0f5;
   padding: 10px;
@@ -294,7 +259,6 @@
   overflow-x: auto;
   white-space: nowrap;
 }
-
 .table-schema-container > div {
   display: inline-block;
   background-color: #e0e0ea;
@@ -305,40 +269,33 @@
   color: #333;
   vertical-align: middle;
 }
-
-/* Itens em formato planilha */
 .table-items-container {
   margin-top: 10px;
   max-height: 300px;
   overflow-y: auto;
   overflow-x: auto;
 }
-
 .table-items-container table {
   width: 100%;
   border-collapse: collapse;
   min-width: 400px;
 }
-
 .table-items-container th,
 .table-items-container td {
   border: 1px solid #ccc;
   padding: 6px 10px;
   text-align: left;
 }
-
 .table-items-container th {
   background-color: #f2f2f2;
   font-weight: 600;
 }
-
 .modal-actions {
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
 }
-
 .btn-open-add-products {
   position: relative;
   top: 20px;
@@ -363,11 +320,9 @@
   transition: right 0.3s ease;
   z-index: 10200;
 }
-
 .sidebar-produtos.show {
   right: 0;
 }
-
 .produto-item {
   margin-bottom: 10px;
 }

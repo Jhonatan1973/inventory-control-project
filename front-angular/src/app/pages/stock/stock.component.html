@@ -81,18 +81,14 @@
 </div>
 <div class="itens-tabela-container" *ngIf="itensTabelaSelecionada.length > 0">
   <h3>Produtos adicionados</h3>
-
   <div *ngFor="let item of itensTabelaSelecionada" class="item-tabela-row">
     <div class="item-nome">{{ item.name }}</div>
-
     <div class="item-campos">
       <div *ngFor="let coluna of tabelaSelecionada?.colunas" class="campo-item">
         <label>{{ coluna.nome }}:</label>
-
         <ng-container *ngIf="coluna.nome.toLowerCase() === 'nome'; else inputField">
           <span>{{ item.fields[coluna.nome] || item.fields[coluna.nome.toLowerCase()] }}</span>
         </ng-container>
-
         <ng-template #inputField>
           <input 
             [type]="coluna.tipo === 'número' ? 'number' : 'text'"
@@ -102,24 +98,15 @@
     </div>
   </div>
 </div>
-<!-- Modal detalhes tabela com definição das colunas -->
 <div class="modal-detalhes-tabela"
      [class.show]="modalDetalhesTabelaAberto"
      (click)="fecharModalDetalhesTabela($event)">
   <div class="modal-detalhes-tabela-content" (click)="$event.stopPropagation()">
-
-    <!-- Nome da Tabela -->
     <h2>{{ tabelaSelecionada?.tableName || 'Tabela' }}</h2>
-
-    <!-- Descrição da Tabela -->
     <p>{{ tabelaSelecionada?.description || 'Sem descrição' }}</p>
-
-    <!-- Botão + apenas se estiver editando -->
     <button *ngIf="mostrarBotaoAdd && tabelaSelecionada"
             class="btn-open-add-products"
             (click)="abrirSidebarProdutos()">+</button>
-
-    <!-- Tabela estilo Excel -->
     <div class="table-items-container" *ngIf="itensTabela.length > 0 && colunasTabelaSelecionada.length > 0; else semItens">
       <table>
         <thead>
@@ -138,33 +125,25 @@
         </tbody>
       </table>
     </div>
-
     <ng-template #semItens>
       <p>Nenhum item adicionado.</p>
     </ng-template>
-
-    <!-- Botões de ação -->
     <div class="modal-actions">
       <button (click)="editarTabela()" [disabled]="!tabelaSelecionada">Editar</button>
       <button (click)="fecharModalDetalhesTabela()">Fechar</button>
     </div>
-
   </div>
 </div>
 
-
 <div class="sidebar-produtos" [class.show]="mostrarSidebarProdutos" (click)="$event.stopPropagation()">
   <button (click)="mostrarSidebarProdutos = false">Fechar</button>
-
   <h3>Produtos disponíveis</h3>
-
   <div *ngFor="let produto of productsBaseList" class="produto-item">
     <label>
       <input type="checkbox" [(ngModel)]="produtoSelecionado[produto.id]" />
       {{ produto?.name }}
     </label>
   </div>
-
   <button (click)="confirmarSelecaoProdutos(); salvarProdutos()">Confirmar</button>
 </div>
 
