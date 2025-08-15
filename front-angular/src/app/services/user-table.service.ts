@@ -12,6 +12,7 @@ export class UserTableService {
   private API_URL_CREATE = 'http://localhost:9090/api/user-tables/create';
   private API_URL_BY_SECTOR = 'http://localhost:9090/api/user-tables/by-sector';
   private API_URL_GET_PRODBASE = 'http://localhost:9090/api/products-base';
+  private API_URL_DEL_TABLE = `http://localhost:9090/api/user-tables`;
 
   constructor(private http: HttpClient) {}
 
@@ -33,6 +34,9 @@ export class UserTableService {
   salvarProdutosNaTabela(tabelaId: number, produtos: ProdutoInTable[]): Observable<any> {
     const url = `http://localhost:9090/api/user-tables/${tabelaId}/produtos`;
     return this.http.post(url, produtos, { headers: this.getAuthHeaders(), responseType: 'text' });
+  }
+  deleteUserTable(tableId: number): Observable<any> {
+    return this.http.delete(`${this.API_URL_DEL_TABLE}/${tableId}`, {headers: this.getAuthHeaders(), responseType: 'text'});
   }
 }
 

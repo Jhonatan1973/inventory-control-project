@@ -6,6 +6,7 @@ import br.org.ccb.estoque.dto.ProductInTableDTO;
 import br.org.ccb.estoque.entity.UserTable;
 import br.org.ccb.estoque.repository.UserTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 @Service
 public class UserTableService {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -64,6 +68,13 @@ public class UserTableService {
         String jsonAtualizado = objectMapper.writeValueAsString(jsonMap);
         tabela.setColumnsStructure(objectMapper.valueToTree(jsonMap));
         userTableRepository.save(tabela);
+    }
+    public boolean deleteTableById(Long id) {
+        if (userTableRepository.existsById(id)) {
+            userTableRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
     public void inserirUserTable(Long userId, Long sectorId, String tableName, String description, String columnsJson) {
         String sql = "INSERT INTO user_tables (user_id, sector_id, name_table, description_table, columns_structure) " +

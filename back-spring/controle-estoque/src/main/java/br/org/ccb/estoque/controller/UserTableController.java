@@ -51,6 +51,16 @@ public class UserTableController {
 
         return ResponseEntity.ok("Tabela criada com sucesso");
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUserTable(@PathVariable Long id) {
+        boolean deleted = userTableService.deleteTableById(id);
+        if (deleted) {
+            return ResponseEntity.ok("Tabela excluída com sucesso!");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Tabela não encontrada");
+        }
+    }
     @PostMapping("/{tabelaId}/produtos")
     public ResponseEntity<?> adicionarProdutos(
             @PathVariable Long tabelaId,

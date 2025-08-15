@@ -326,3 +326,198 @@
 .produto-item {
   margin-bottom: 10px;
 }
+.stock-modal-escolha {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100000;
+}
+.stock-modal-escolha-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+.stock-modal-escolha-content button {
+  margin: 5px;
+}
+.stock-modal-quantidade {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 992299;
+}
+.stock-modal-quantidade-content {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 450px;
+  max-height: 90%;
+  overflow-y: auto;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.4);
+}
+.stock-modal-quantidade-content h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #333;
+  text-align: center;
+}
+.stock-modal-quantidade-content input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.stock-table-container {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+.stock-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.stock-table-container th,
+.stock-table-container td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+.stock-table-container th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+.stock-table-container td input[type="number"] {
+  width: 70px;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.stock-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.stock-modal-buttons button {
+  padding: 8px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #2a9d8f;
+  color: white;
+  transition: background-color 0.2s;
+}
+.stock-modal-buttons button:hover {
+  background-color: #21867a;
+}
+.stock-modal-buttons .btn-cancel {
+  background-color: #e76f51;
+}
+.stock-modal-buttons .btn-cancel:hover {
+  background-color: #d65b3d;
+}
+.stock-modal-retirar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.stock-modal-retirar-content {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 450px;
+  max-height: 90%;
+  overflow-y: auto;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.4);
+}
+.stock-modal-retirar-content h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #333;
+  text-align: center;
+}
+.stock-modal-retirar-content input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.stock-retirar-table-container {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+.stock-retirar-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.stock-retirar-table-container th,
+.stock-retirar-table-container td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+.stock-retirar-table-container th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+.stock-retirar-table-container td input[type="number"] {
+  width: 70px;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.stock-retirar-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.stock-retirar-modal-buttons button {
+  padding: 8px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #e76f51;
+  color: white;
+  transition: background-color 0.2s;
+}
+.stock-retirar-modal-buttons button:hover {
+  background-color: #d65b3d;
+}
+.stock-retirar-modal-buttons .btn-cancel {
+  background-color: #aaa;
+}
+.stock-retirar-modal-buttons .btn-cancel:hover {
+  background-color: #888;
+}
