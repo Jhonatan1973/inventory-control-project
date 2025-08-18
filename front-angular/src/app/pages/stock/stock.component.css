@@ -520,4 +520,21 @@
 }
 .stock-retirar-modal-buttons .btn-cancel:hover {
   background-color: #888;
+}.outras-validade {
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+}
+.outras-validade ul {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  list-style: none;
+  margin: 0;
+  z-index: 10;
+}
+.outras-validade li {
+  padding: 2px 5px;
+  cursor: default;
 }

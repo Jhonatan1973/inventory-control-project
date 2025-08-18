@@ -15,10 +15,8 @@ public class ProductBaseController {
     public ProductBaseController(ProductBaseRepository productBaseRepository) {
         this.productBaseRepository = productBaseRepository;
     }
-
     @GetMapping
     public List<ProductBase> listarTodos() {
         return productBaseRepository.findAll();
     }
-
 }

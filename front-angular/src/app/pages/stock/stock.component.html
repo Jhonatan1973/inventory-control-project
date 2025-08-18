@@ -1,23 +1,22 @@
-
 <app-topbar></app-topbar>
 <app-menu-desktop></app-menu-desktop>
+
 <div id="login-background" class="container-fluid d-flex justify-content-center align-items-center"></div>
+
 <h2 class="title-page">Gerenciar Estoque</h2>
 
 <div class="top-content">
-<button type="button" class="btn-add" (click)="abrirModal()">+ Adicionar</button>
-
-<p class="quantity-tables">Quantidade de tabelas: {{ tabelasSetor.length }}</p>
-
-<div class="top-line"></div>
+  <button type="button" class="btn-add" (click)="abrirModal()">+ Adicionar</button>
+  <p class="quantity-tables">Quantidade de tabelas: {{ tabelasSetor.length }}</p>
+  <div class="top-line"></div>
 </div>
 <div class="div-content">
   <div *ngFor="let tabela of tabelasSetor" class="table-information-content">
     <h1 style="margin-bottom: 10px;">{{ tabela.tableName }}</h1>
-    <p class="description">Descrição: {{ tabela.description }}</p>
+    <p class="description">Descrição: {{ tabela.description || 'Sem descrição' }}</p>
     <p class="quantity" style="margin-bottom: 50px;">Quantidade de itens: {{ tabela.itemCount || 0 }}</p>
     <div class="line-div-table"></div>
-    <button type="button" class="btn btn-outline-secondary" style="margin-left: -20px;" (click)="abrirModalDetalhesTabela(tabela)">Entrar</button>
+    <button type="button" class="btn btn-outline-secondary" (click)="abrirModalDetalhesTabela(tabela)">Entrar</button>
     <button type="button" class="btn btn-outline-danger" (click)="excluirTabela(tabela.id, tabela.tableName)">Excluir</button>
   </div>
 </div>
@@ -27,82 +26,77 @@
       <h2>Criar Nova Tabela</h2>
       <p>Configure uma nova tabela para organizar seus produtos</p>
     </div>
-
-<div class="form-group">
-  <label>Nome da Tabela</label>
-  <input
-    type="text"
-    class="uppercase"
-    placeholder="Ex: GELADEIRA"
-    [(ngModel)]="nomeTabela"
-    (ngModelChange)="nomeTabela = nomeTabela.toUpperCase()"
-  />
-</div>
-
-<div class="form-group">
-  <label>Descrição (Opcional)</label>
-  <input
-    type="text"
-    placeholder="Ex: Pratileria A-H"
-    [(ngModel)]="descricaoTabela"
-  />
-</div>
+    <div class="form-group">
+      <label>Nome da Tabela</label>
+      <input
+        type="text"
+        class="uppercase"
+        placeholder="Ex: GELADEIRA"
+        [(ngModel)]="nomeTabela"
+        (ngModelChange)="nomeTabela = nomeTabela.toUpperCase()"
+      />
+    </div>
+    <div class="form-group">
+      <label>Descrição (Opcional)</label>
+      <input type="text" placeholder="Ex: Prateleira A-H" [(ngModel)]="descricaoTabela" />
+    </div>
     <div class="form-group">
       <div class="coluna-header">
         <label>Colunas da Tabela</label>
-        <button class="btn-add-coluna" (click)="adicionarColuna()">+ Adicionar Coluna</button>
+        <button class="btn-add-coluna" type="button" (click)="adicionarColuna()">+ Adicionar Coluna</button>
       </div>
-
       <div *ngFor="let col of colunas; let i = index" class="coluna-item">
         <input type="text" [(ngModel)]="colunas[i].nome" placeholder="Nome da Coluna" />
-
         <select [(ngModel)]="colunas[i].tipo">
           <option value="texto">Texto</option>
           <option value="número">Número</option>
           <option value="data">Data</option>
         </select>
         <label class="obrigatorio">
-          <input type="checkbox" [(ngModel)]="colunas[i].obrigatorio" />
-          Obrigatório
+          <input type="checkbox" [(ngModel)]="colunas[i].obrigatorio" /> Obrigatório
         </label>
-        <button *ngIf="colunas.length > 1" class="btn-remove" (click)="removerColuna(i)">×</button>
+        <button *ngIf="colunas.length > 1" class="btn-remove" type="button" (click)="removerColuna(i)">×</button>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-cancelar" (click)="fecharModal()">Cancelar</button>
-      <button class="btn-confirmar" (click)="confirmarCriacao()" [disabled]="!isFormValid()">Criar Tabela</button>
+      <button class="btn-cancelar" type="button" (click)="fecharModal()">Cancelar</button>
+      <button class="btn-confirmar" type="button" (click)="confirmarCriacao()" [disabled]="!isFormValid()">Criar Tabela</button>
     </div>
   </div>
 </div>
 <div class="stock-modal-escolha" *ngIf="modalQuantidadeAberto && acao === 'escolher'">
   <div class="stock-modal-escolha-content">
     <h3>O que deseja fazer?</h3>
-    <button (click)="selecionarAcao('adicionar')">Adicionar</button>
-    <button (click)="selecionarAcao('diminuir')">Diminuir</button>
-    <button (click)="fecharModalQuantidade()">Cancelar</button>
+    <button type="button" (click)="selecionarAcao('adicionar')">Adicionar</button>
+    <button type="button" (click)="selecionarAcao('diminuir')">Diminuir</button>
+    <button type="button" (click)="fecharModalQuantidade()">Cancelar</button>
   </div>
 </div>
-<div class="modal-detalhes-tabela"
-     [class.show]="modalDetalhesTabelaAberto"
-     (click)="fecharModalDetalhesTabela($event)">
+<div class="modal-detalhes-tabela" [class.show]="modalDetalhesTabelaAberto" (click)="fecharModalDetalhesTabela($event)">
   <div class="modal-detalhes-tabela-content" (click)="$event.stopPropagation()">
     <h2>{{ tabelaSelecionada?.tableName || 'Tabela' }}</h2>
     <p>{{ tabelaSelecionada?.description || 'Sem descrição' }}</p>
-    <button *ngIf="mostrarBotaoAdd && tabelaSelecionada" class="btn-open-add-products" (click)="abrirSidebarProdutos()">+</button>
-    <button *ngIf="mostrarBotaoAdd && tabelaSelecionada" class="btn-open-add-products" (click)="abrirModalEscolhaAcao()">Alterar</button>
+    <button *ngIf="mostrarBotaoAdd && tabelaSelecionada" class="btn-open-add-products" type="button" (click)="abrirSidebarProdutos()">+</button>
+    <button *ngIf="mostrarBotaoAdd && tabelaSelecionada" class="btn-open-add-products" type="button" (click)="abrirModalEscolhaAcao()">Alterar</button>
     <div class="table-items-container" *ngIf="itensTabela.length > 0 && colunasTabelaSelecionada.length > 0; else semItens">
       <table>
         <thead>
           <tr>
-            <th *ngFor="let coluna of colunasTabelaSelecionada">
-              {{ coluna.nome || '-' }}
-            </th>
+            <th *ngFor="let coluna of colunasTabelaSelecionada">{{ coluna.nome || '-' }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of itensTabela">
             <td *ngFor="let coluna of colunasTabelaSelecionada">
-              {{ coluna.nomeKey ? item.fields[coluna.nomeKey] ?? '-' : '-' }}
+              <ng-container *ngIf="coluna.nomeKey === 'validade'; else normalColumn">
+                <span>{{ getValidadePrincipal(item) }}</span>
+                <select *ngIf="getOutrasValidades(item).length > 0">
+                  <option *ngFor="let data of getOutrasValidades(item)" [value]="data">{{ data }}</option>
+                </select>
+              </ng-container>
+              <ng-template #normalColumn>
+                {{ coluna.nomeKey ? item.fields[coluna.nomeKey] ?? '-' : '-' }}
+              </ng-template>
             </td>
           </tr>
         </tbody>
@@ -112,51 +106,63 @@
       <p>Nenhum item adicionado.</p>
     </ng-template>
     <div class="modal-actions">
-      <button (click)="editarTabela()" [disabled]="!tabelaSelecionada">Editar</button>
-      <button (click)="fecharModalDetalhesTabela()">Fechar</button>
+      <button type="button" (click)="editarTabela()" [disabled]="!tabelaSelecionada">Editar</button>
+      <button type="button" (click)="fecharModalDetalhesTabela()">Fechar</button>
     </div>
   </div>
 </div>
 <div class="sidebar-produtos" [class.show]="mostrarSidebarProdutos" (click)="$event.stopPropagation()">
-  <button (click)="mostrarSidebarProdutos = false">Fechar</button>
+  <button type="button" (click)="mostrarSidebarProdutos = false">Fechar</button>
   <h3>Produtos disponíveis</h3>
-      <div>
-      <input type="checkbox" [checked]="selectAll" (change)="toggleSelectAll()" />
-      <label>Selecionar Todos</label>
-    </div>
+  <div>
+    <input type="checkbox" [checked]="selectAll" (change)="toggleSelectAll()" />
+    <label>Selecionar Todos</label>
+  </div>
   <div *ngFor="let produto of productsBaseList" class="produto-item">
     <label>
       <input type="checkbox" [(ngModel)]="produtoSelecionado[produto.id]" />
       {{ produto?.name }}
     </label>
   </div>
-  <button (click)="confirmarSelecaoProdutos(); salvarProdutos()">Confirmar</button>
+<button type="button" (click)="confirmarSelecaoProdutos($event); salvarProdutos()">Confirmar</button>
 </div>
 <div class="stock-modal-quantidade" *ngIf="modalQuantidadeAberto && acao === 'adicionar'">
   <div class="stock-modal-quantidade-content">
     <h3>Adicionar Quantidade</h3>
+    <label>Fornecedor:</label>
+    <input type="text" [(ngModel)]="fornecedorGlobal" placeholder="Fornecedor" />
+    <label>Valor do Produto:</label>
+    <input type="number" [(ngModel)]="valorProdutoGlobal" placeholder="Valor do Produto" />
     <input type="text" placeholder="Pesquisar produto..." [(ngModel)]="filtro" />
     <div class="stock-table-container">
-      <table>
+      <table *ngIf="itensTabela.length > 0">
         <thead>
           <tr>
-            <th>Produto</th>
-            <th>Quantidade Atual</th>
-            <th>Adicionar</th>
+            <th>Nome</th>
+            <th>Quantidade</th>
+            <th *ngIf="colunaExiste('validade')">Validade</th>
+            <th>Alterar</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of filtrarProdutos()">
             <td>{{ item.name }}</td>
-            <td>{{ item.fields['quantidade'] }}</td>
-            <td><input type="number" [(ngModel)]="item.qtdAlterar" min="0"></td>
+            <td>{{ item.fields['quantidade'] ?? 0 }}</td>
+            <td *ngIf="colunaExiste('validade')">
+              <span>{{ getValidadePrincipal(item) }}</span>
+              <select *ngIf="getOutrasValidades(item).length > 0">
+                <option *ngFor="let data of getOutrasValidades(item)" [value]="data">{{ data }}</option>
+              </select>
+            </td>
+            <td><input type="number" [(ngModel)]="item.qtdAlterar" min="0" placeholder="Qtd"></td>
           </tr>
         </tbody>
       </table>
+      <p *ngIf="itensTabela.length === 0">Nenhum item adicionado.</p>
     </div>
     <div class="stock-modal-buttons">
-      <button (click)="confirmarAlteracao()">Confirmar</button>
-      <button class="btn-cancel" (click)="fecharModalQuantidade()">Cancelar</button>
+      <button type="button" (click)="confirmarAlteracao()">Confirmar</button>
+      <button class="btn-cancel" type="button" (click)="fecharModalQuantidade()">Cancelar</button>
     </div>
   </div>
 </div>
@@ -169,22 +175,22 @@
         <thead>
           <tr>
             <th>Produto</th>
-            <th>Quantidade Atual</th>
+            <th>Quantidade</th>
             <th>Retirar</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of filtrarProdutos()">
             <td>{{ item.name }}</td>
-            <td>{{ item.fields['quantidade'] }}</td>
+            <td>{{ item.fields['quantidade'] ?? 0 }}</td>
             <td><input type="number" [(ngModel)]="item.qtdAlterar" min="0"></td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="stock-retirar-modal-buttons">
-      <button (click)="confirmarAlteracao()">Confirmar</button>
-      <button class="btn-cancel" (click)="fecharModalQuantidade()">Cancelar</button>
+      <button type="button" (click)="confirmarAlteracao()">Confirmar</button>
+      <button class="btn-cancel" type="button" (click)="fecharModalQuantidade()">Cancelar</button>
     </div>
   </div>
 </div>
