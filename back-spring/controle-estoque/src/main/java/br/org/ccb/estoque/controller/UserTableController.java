@@ -2,6 +2,7 @@ package br.org.ccb.estoque.controller;
 
 import br.org.ccb.estoque.dto.ProductInTableDTO;
 import br.org.ccb.estoque.dto.HistoricoDTO;
+import br.org.ccb.estoque.entity.Historico;
 import br.org.ccb.estoque.entity.User;
 import br.org.ccb.estoque.entity.UserTable;
 import br.org.ccb.estoque.repository.UserRepository;
@@ -121,6 +122,21 @@ public class UserTableController {
         Long sectorId = userOpt.get().getSectorId();
         List<UserTable> tabelas = userTableService.buscarPorSetor(sectorId);
         return ResponseEntity.ok(tabelas);
+    }
+    @GetMapping("/historico/by-sector")
+    public ResponseEntity<List<Historico>> getHistoricoBySector(Authentication authentication) {
+        String email = authentication.getName();
+        Optional<User> userOpt = userRepository.findByEmail(email);
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(401).build();
+        }
+
+        User user = userOpt.get();
+        Long sectorId = user.getSectorId();
+
+        List<Historico> historico = historicoService.buscarPorSetor(sectorId);
+        return ResponseEntity.ok(historico);
     }
     @Getter @Setter
     public static class CreateUserTableRequest {

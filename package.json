@@ -1,0 +1,26 @@
+{
+  "name": "inventory-control-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+"scripts": {
+  "start": "concurrently \"npm run start:front\" \"npm run start:back:win\"",
+  "start:front": "cd front-angular && ng serve",
+  "start:back:win": "cd back-spring/controle-estoque && mvn spring-boot:run"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jhonatan1973/inventory-control-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Jhonatan1973/inventory-control-project/issues"
+  },
+  "homepage": "https://github.com/Jhonatan1973/inventory-control-project#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

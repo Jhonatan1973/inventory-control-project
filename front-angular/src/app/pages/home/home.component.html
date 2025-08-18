@@ -29,7 +29,7 @@
       <img src="/home/calendario.png" alt="">
     </div>
     <h1>Última Atualização</h1>
-    <p class="consert-last-update">29/07/25</p>
+    <p class="consert-last-update">18/08/25</p>
   </div>
 </div>
 <div *ngIf="isLoggedIn" class="sistem-status">
@@ -53,22 +53,11 @@
 <div class="historico-acoes">
   <h2>Histórico de Ação</h2>
   <p>Últimas atividades registradas</p>
-
   <div class="caixa-atividades">
-    <div class="linha-atividade">
-      <h3>Nome da ação</h3>
-      <p>O que foi alterado</p>
-      <span class="data-alteracao">29/07/25</span>
-    </div>
-    <div class="linha-atividade">
-      <h3>Outra ação</h3>
-      <p>Mais uma alteração</p>
-      <span class="data-alteracao">30/07/25</span>
-    </div>
-    <div class="linha-atividade">
-      <h3>Terceira ação</h3>
-      <p>Alguma modificação</p>
-      <span class="data-alteracao">31/07/25</span>
+    <div *ngFor="let h of historicoSetor" class="linha-atividade">
+      <h3>{{ h.acao }}</h3>
+      <p>Chegou {{ h.delta }} itens para o</p>
+      <span class="data-alteracao">{{ h.createdAt | date:'dd/MM/yy' }}</span>
     </div>
   </div>
 </div>
