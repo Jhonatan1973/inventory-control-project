@@ -72,16 +72,25 @@ export class StockComponent {
 
   fornecedorGlobal = '';
   valorProdutoGlobal = 0;
-
   constructor(private userTableService: UserTableService) {}
-
-  ngOnInit() { this.carregarTabelasSetor(); }
+    ngOnInit() { 
+      this.carregarTabelasSetor(); 
+    }
   carregarTabelasSetor() {
     this.userTableService.getTablesBySector().subscribe({
-      next: data => this.tabelasSetor = data,
+      next: data => {
+        this.tabelasSetor = data.map(t => {
+          let count = 0;
+          if (typeof t.columnsStructure === 'object' && t.columnsStructure !== null) {
+            const colsStruct = t.columnsStructure as ColumnsStructureObject;
+            count = Array.isArray(colsStruct.itens) ? colsStruct.itens.length : 0;
+          }
+          return { ...t, itemCount: count };
+        });
+      },
       error: err => console.error('Erro ao carregar tabelas do setor', err)
     });
-}
+  }
   excluirTabela(tabelaId: number, nomeTabela: string) {
     if (!confirm(`Deseja excluir a tabela "${nomeTabela}"?`)) return;
     this.userTableService.deleteUserTable(tabelaId).subscribe({
