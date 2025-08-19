@@ -35,6 +35,7 @@ export interface Tabela {
   itemCount: number;
   columnsStructure: string | ColumnsStructureObject;
   colunas?: Coluna[];
+  selecionado?: boolean;
 }
 @Component({
   selector: 'app-stock',

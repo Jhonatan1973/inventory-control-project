@@ -1,0 +1,115 @@
+.div-config-content {
+  margin: 100px auto 50px;
+  padding: 20px;
+  max-width: 1400px;
+  background-color: #ededed;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  position: relative;
+}
+.btn-custom {
+  background-color: #4a90e2;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  margin: 4px 2px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+.btn-custom:hover {
+  background-color: #357ab7;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.btn-custom:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.4);
+}
+.btn-custom.danger {
+  background-color: #e94e4e;
+}
+.btn-custom.secondary {
+  background-color: #7b7b7b;
+}
+.btn-custom.danger:hover {
+  background-color: #c0392b;
+}
+.btn-custom.secondary:hover {
+  background-color: #a5a5a5;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+.modal-content-custom {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 600px;
+  max-height: 80%;
+  overflow-y: auto;
+}
+.tables-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.table-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+.historico-filtro label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.historico-filtro input[type="date"] {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: all 0.2s;
+}
+.historico-filtro input[type="date"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+.historico-preview {
+  background-color: #f0f4f8;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  margin-top: 10px;
+  font-weight: 600;
+  color: #333;
+  display: inline-block;
+}
+.historico-preview p {
+  margin: 0;
+  font-size: 16px;
+}
