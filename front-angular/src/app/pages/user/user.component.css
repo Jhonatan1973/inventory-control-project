@@ -1,0 +1,46 @@
+.user-profile-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.user-profile-card {
+    position: fixed;
+    margin-top: 102px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.user-photo img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+    border: 2px solid #4a90e2;
+}
+
+.user-info h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.user-sector {
+    margin: 2px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.user-role {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4a90e2;
+}

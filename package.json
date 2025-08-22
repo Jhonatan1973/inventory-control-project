@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-"scripts": {
-  "start": "concurrently \"npm run start:front\" \"npm run start:back:win\"",
-  "start:front": "cd front-angular && ng serve",
-  "start:back:win": "cd back-spring/controle-estoque && mvn spring-boot:run"
-},
+  "scripts": {
+    "start": "concurrently \"npm run start:front\" \"npm run start:back:win\"",
+    "start:front": "cd front-angular && dotenv -e .env.local -- ng serve", 
+    "start:back:win": "cd back-spring/controle-estoque && mvn spring-boot:run"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jhonatan1973/inventory-control-project.git"
@@ -21,6 +21,11 @@
   },
   "homepage": "https://github.com/Jhonatan1973/inventory-control-project#readme",
   "devDependencies": {
-    "concurrently": "^9.2.0"
+    "@types/node": "^24.3.0",
+    "concurrently": "^9.2.0",
+    "dotenv-cli": "^10.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1"
   }
 }

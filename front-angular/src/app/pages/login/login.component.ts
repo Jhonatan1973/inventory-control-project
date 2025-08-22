@@ -29,7 +29,7 @@ export class LoginComponent implements OnDestroy {
   senha = '';
   showPassword = false;
   isLogin = true;
-  rememberMe = false; 
+  rememberMe = false;
 
   showForm = true;
   waitingApproval = false;
@@ -38,29 +38,29 @@ export class LoginComponent implements OnDestroy {
   expired = false;
   private timerSubscription?: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
-onSubmit(): void {
+  onSubmit(): void {
     if (this.isLogin) {
       this.authService.login(this.email, this.senha).subscribe({
         next: (res) => {
           const storage = localStorage;
           storage.setItem('token', res.token);
           storage.setItem('username', res.username);
-          storage.setItem('sector', res.sectorName);
           storage.setItem('role', res.roleName);
+          storage.setItem('sector', res.sectorName);
           this.router.navigate(['/home']);
         },
         error: (err) => {
           console.error('Erro ao fazer login:', err);
           alert('Email ou senha inválidos');
-      }
-    });
+        }
+      });
+    }
   }
-}
   ngOnDestroy(): void {
     this.timerSubscription?.unsubscribe();
   }

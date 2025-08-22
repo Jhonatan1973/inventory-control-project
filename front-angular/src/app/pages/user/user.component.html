@@ -1,0 +1,15 @@
+<app-topbar></app-topbar>
+<div id="login-background" class="container-fluid d-flex justify-content-center align-items-center "style="background: linear-gradient(to right, #dbdbdb, #dbdbdb); height: 100%; position: fixed;"></div>
+<app-menu-desktop></app-menu-desktop>
+<div class="user-profile-container">
+  <div class="user-profile-card">
+    <div class="user-photo">
+      <img src="/user/users-generico.avif" alt="Foto do Usuário">
+    </div>
+    <div class="user-info">
+      <h2>{{ username }}</h2>
+      <p class="user-sector">{{ sector }}</p>
+      <p class="user-role">{{ isAdmin ? 'Admin' : 'Usuário' }}</p>
+    </div>
+  </div>
+</div>

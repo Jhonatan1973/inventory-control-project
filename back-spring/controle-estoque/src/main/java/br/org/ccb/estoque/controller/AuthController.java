@@ -2,10 +2,15 @@ package br.org.ccb.estoque.controller;
 
 import br.org.ccb.estoque.dto.LoginResponseDTO;
 import br.org.ccb.estoque.dto.UserDTO;
+import br.org.ccb.estoque.entity.Role;
+import br.org.ccb.estoque.entity.Sector;
 import br.org.ccb.estoque.entity.User;
+import br.org.ccb.estoque.repository.RoleRepository;
+import br.org.ccb.estoque.repository.SectorRepository;
 import br.org.ccb.estoque.repository.UserRepository;
 import br.org.ccb.estoque.service.EmailService;
 import br.org.ccb.estoque.service.JwtService;
+import jakarta.annotation.security.PermitAll;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,11 @@ public class AuthController {
     private AuthenticationManager authManager;
 
     @Autowired
+    private RoleRepository roleRepo;
+
+    @Autowired
+    private SectorRepository sectorRepo;
+    @Autowired
     private UserRepository repo;
 
     @Autowired
@@ -42,60 +52,67 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    // -------------------- LOGIN --------------------
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {
             authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
             );
+
             Optional<User> userOpt = repo.findByEmail(user.getEmail());
             if (userOpt.isEmpty()) {
                 return ResponseEntity.status(404).body("Usuário não encontrado.");
             }
+
             User foundUser = userOpt.get();
             foundUser.setOnline(true);
             repo.save(foundUser);
+
             String roleName = foundUser.getRole() != null ? foundUser.getRole().getName() : null;
             String sectorName = foundUser.getSector() != null ? foundUser.getSector().getName() : null;
             String token = jwtService.generateToken(foundUser.getEmail(), roleName);
-            LoginResponseDTO response = new LoginResponseDTO(
-                    token,
-                    foundUser.getUsername(),
-                    roleName,
-                    sectorName
-            );
 
+            LoginResponseDTO response = new LoginResponseDTO(token, foundUser.getUsername(), roleName, sectorName);
             return ResponseEntity.ok(response);
+
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(401).body("Email ou senha inválidos.");
         } catch (Exception e) {
             return ResponseEntity.status(403).body("Falha na autenticação.");
         }
     }
+
+    // -------------------- LOGOUT --------------------
     @PostMapping("/auth/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
         try {
             String token = authHeader.replace("Bearer ", "");
             String email = jwtService.extractEmail(token);
-            Optional<User> userOpt = repo.findByEmail(email);
 
+            Optional<User> userOpt = repo.findByEmail(email);
             if (userOpt.isEmpty()) {
                 return ResponseEntity.status(404).body("Usuário não encontrado.");
             }
+
             User user = userOpt.get();
             user.setOnline(false);
             repo.save(user);
+
             return ResponseEntity.ok("Logout realizado com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.status(400).body("Erro ao processar logout.");
         }
     }
+
+    // -------------------- ENVIO E VERIFICAÇÃO DE CÓDIGO --------------------
     @PostMapping("/auth/sendVerificationCode")
     public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> body) {
         String email = body.get("email");
         if (email == null || email.isBlank()) {
             return ResponseEntity.badRequest().body("E-mail obrigatório");
         }
+
         emailService.sendVerificationEmail(email);
         return ResponseEntity.ok("Código enviado");
     }
@@ -104,14 +121,17 @@ public class AuthController {
     public ResponseEntity<?> verifyCode(@RequestBody Map<String, String> body) {
         String email = body.get("email");
         String token = body.get("token");
+
         if (email == null || token == null) {
             return ResponseEntity.badRequest().body("Email e token obrigatórios");
         }
+
         boolean valid = emailService.verifyToken(email, token);
         return valid
                 ? ResponseEntity.ok("Código válido")
                 : ResponseEntity.status(401).body("Código inválido ou expirado");
     }
+
     @PostMapping("/auth/confirmUser")
     public ResponseEntity<?> confirmUser(@RequestBody Map<String, String> body) {
         String email = body.get("email");
@@ -136,63 +156,72 @@ public class AuthController {
         repo.save(user);
 
         String resetToken = UUID.randomUUID().toString();
-        String resetLink = "http://localhost:4200/reset-password?token=" + resetToken;
+        String resetLink = "http://localhost:4500/reset-password?token=" + resetToken;
         emailService.sendPasswordResetEmail(email, resetLink);
 
         return ResponseEntity.ok("Usuário confirmado e email para redefinir senha enviado");
     }
 
+    // -------------------- CRUD DE USUÁRIOS --------------------
     @PostMapping("/users")
+    @PermitAll
     public ResponseEntity<?> createUser(@RequestBody User newUser) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String creatorEmail = auth.getName();
 
-        Optional<User> creatorOpt = repo.findByEmail(creatorEmail);
-        if (creatorOpt.isEmpty()) {
-            return ResponseEntity.status(403).body("Usuário não autenticado");
+        // Valida campos obrigatórios
+        if (newUser.getUsername() == null || newUser.getEmail() == null
+                || newUser.getRole() == null || newUser.getPassword() == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Campos obrigatórios faltando"));
         }
-        User creator = creatorOpt.get();
-        if (!"ADMIN".equalsIgnoreCase(String.valueOf(creator.getRole()))) {
-            return ResponseEntity.status(403).body("Apenas ADMIN pode criar novos usuários");
-        }
-        if (newUser.getUsername() == null || newUser.getEmail() == null || newUser.getRole() == null || newUser.getPassword() == null) {
-            return ResponseEntity.badRequest().body("Campos obrigatórios faltando");
-        }
+
+        // Verifica se email já existe
         if (repo.findByEmail(newUser.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email já cadastrado");
+            return ResponseEntity.badRequest().body(Map.of("error", "Email já cadastrado"));
         }
+
+        // Criptografa senha
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        newUser.setSector(creator.getSector());
+
+        // Set setor e role corretamente
+        if (newUser.getRole() != null) {
+            Role role = roleRepo.findById(newUser.getRole().getId())
+                    .orElseThrow(() -> new RuntimeException("Role não encontrado"));
+            newUser.setRole(role);
+            newUser.setRoleId(role.getId());
+        }
+
+        if (newUser.getSector() != null) {
+            Sector sector = sectorRepo.findById(newUser.getSector().getId())
+                    .orElseThrow(() -> new RuntimeException("Sector não encontrado"));
+            newUser.setSector(sector);
+            newUser.setSectorId(sector.getId());
+        }
+
         newUser.setId(null);
         newUser.setLastModified(null);
         newUser.setOnline(false);
         newUser.setConfirmed(false);
-        User savedUser = repo.save(newUser);
 
+        User savedUser = repo.save(newUser);
         emailService.sendVerificationEmail(savedUser.getEmail());
 
-        return ResponseEntity.ok(Map.of("message", "Usuário criado com sucesso. Um código foi enviado para o email para confirmação."));
+        return ResponseEntity.ok(Map.of(
+                "message", "Usuário criado com sucesso. Um código foi enviado para o email para confirmação.",
+                "userId", savedUser.getId()
+        ));
     }
+
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
         Optional<User> existingUserOpt = repo.findById(id);
         if (existingUserOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        User existingUser = existingUserOpt.get();
 
-        if (updatedUser.getUsername() != null) {
-            existingUser.setUsername(updatedUser.getUsername());
-        }
-        if (updatedUser.getEmail() != null) {
-            existingUser.setEmail(updatedUser.getEmail());
-        }
-        if (updatedUser.getRole() != null) {
-            existingUser.setRole(updatedUser.getRole());
-        }
-        if (updatedUser.getSector() != null) {
-            existingUser.setSector(updatedUser.getSector());
-        }
+        User existingUser = existingUserOpt.get();
+        if (updatedUser.getUsername() != null) existingUser.setUsername(updatedUser.getUsername());
+        if (updatedUser.getEmail() != null) existingUser.setEmail(updatedUser.getEmail());
+        if (updatedUser.getRole() != null) existingUser.setRole(updatedUser.getRole());
+        if (updatedUser.getSector() != null) existingUser.setSector(updatedUser.getSector());
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
             existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
@@ -200,6 +229,7 @@ public class AuthController {
         User savedUser = repo.save(existingUser);
         return ResponseEntity.ok(savedUser);
     }
+
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -209,9 +239,9 @@ public class AuthController {
         if (requesterOpt.isEmpty()) {
             return ResponseEntity.status(403).body("Usuário não autenticado");
         }
-        User requester = requesterOpt.get();
 
-        if (!"ADMIN".equalsIgnoreCase(String.valueOf(requester.getRole()))) {
+        User requester = requesterOpt.get();
+        if (!"ADMIN".equalsIgnoreCase(requester.getRole().getName())) {
             return ResponseEntity.status(403).body("Apenas ADMIN pode deletar usuários");
         }
 
@@ -219,9 +249,11 @@ public class AuthController {
         if (userOpt.isEmpty()) {
             return ResponseEntity.status(404).body("Usuário não encontrado");
         }
+
         repo.deleteById(id);
         return ResponseEntity.ok("Usuário deletado com sucesso");
     }
+
     @GetMapping("/users")
     public ResponseEntity<?> getUsersBySector() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -231,11 +263,14 @@ public class AuthController {
         if (userOpt.isEmpty()) {
             return ResponseEntity.status(401).body("Usuário não autenticado");
         }
+
         User loggedUser = userOpt.get();
         List<UserDTO> usersSameSector = repo.findUsersBySectorId(loggedUser.getSectorId());
 
         return ResponseEntity.ok(usersSameSector);
     }
+
+    // -------------------- JWT RESPONSE DTO --------------------
     @Setter
     @Getter
     public static class JwtResponse {

@@ -12,8 +12,8 @@ public class UserDTO {
     private String username;
     private String email;
     private String password;
-    private String roleName;   // nome da role
-    private String sectorName; // nome do setor
+    private String roleName;
+    private String sectorName;
     private String lastModified;
 }
 

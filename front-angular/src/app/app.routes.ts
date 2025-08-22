@@ -5,6 +5,7 @@ import { AuthGuard } from './guard/AuthGuard';
 import { StockComponent } from './pages/stock/stock.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ConfigComponent } from './pages/config/config.component';
+import { UserComponent } from './pages/user/user.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'stock', component: StockComponent, canActivate: [AuthGuard]},
   { path: 'register', component: RegisterComponent, canActivate: [AuthGuard]},
   { path: 'config', component: ConfigComponent, canActivate: [AuthGuard]},
+  { path: 'user', component: UserComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 ];

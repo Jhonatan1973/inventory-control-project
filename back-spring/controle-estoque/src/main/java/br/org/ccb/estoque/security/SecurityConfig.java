@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,21 +37,22 @@ public class SecurityConfig {
         return authBuilder.build();
     }
     @Bean
-    public JwtFilter jwtFilter(JwtService jwtService, UserService userService) {
-        return new JwtFilter(jwtService, userService);
+    public JwtFilter jwtFilter(JwtService jwtService) {
+        return new JwtFilter(jwtService);
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         http
                 .cors(withDefaults())
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users").hasAuthority("admin")
-                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAuthority("admin")
-                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("admin")
+                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users").authenticated()
                         .anyRequest().authenticated()
                 )

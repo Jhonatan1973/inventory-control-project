@@ -5,8 +5,8 @@ export interface UserInterface {
   password?: string;
   roleId?: number;
   sectorId?: number;  
-  sectorName: string;
-  roleName: string;
+  sectorName?: string;
+  roleName?: string;
   lastModified?: string;
   online?: boolean;
   confirmed?: boolean;

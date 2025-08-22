@@ -55,11 +55,9 @@
                 />
               </button>
             </div>
-            @if (senhaLogin.invalid && senhaLogin.touched) {
-              <div class="text-danger small">
+              <div *ngIf="senhaLogin.invalid && senhaLogin.touched" class="text-danger small">
                 Senha ou email inválidos.
               </div>
-            }
           </div>
           <div class="form-check mb-4">
             <input
@@ -71,7 +69,6 @@
             <label class="form-check-label" for="checkChecked">Lembrar-me</label>
           </div>
           <button type="submit" class="btn btn-secondary w-100" [disabled]="loginForm.invalid">Entrar</button>
-
           <div class="text-center mt-3">
             Esqueceu sua senha?
             <a routerLink="/forgot-password" class="text-secondary">Clique aqui</a>

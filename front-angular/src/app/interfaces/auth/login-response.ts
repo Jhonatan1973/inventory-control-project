@@ -1,6 +1,8 @@
 export interface LoginResponse {
   token: string;
   username: string;
-  sectorName: string;
   roleName: string;
+  roleId: number;
+  sectorName: string;
+  sectorId: number;
 }

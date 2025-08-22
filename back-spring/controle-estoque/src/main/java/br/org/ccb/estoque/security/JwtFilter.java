@@ -1,39 +1,44 @@
 package br.org.ccb.estoque.security;
 
 import br.org.ccb.estoque.service.JwtService;
-import br.org.ccb.estoque.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.lang.NonNull;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserService userService;
 
-    public JwtFilter(JwtService jwtService, @Lazy UserService userService) {
+    public JwtFilter(@NonNull JwtService jwtService) {
         this.jwtService = jwtService;
-        this.userService = userService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
+
+        // Ignorar OPTIONS (CORS preflight)
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             filterChain.doFilter(request, response);
             return;
         }
+
         String path = request.getServletPath();
+
+        // Ignorar rotas de autenticação
         if (path.startsWith("/api/auth/")) {
             filterChain.doFilter(request, response);
             return;
@@ -43,12 +48,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+
             if (jwtService.isTokenValid(token)) {
                 String email = jwtService.extractEmail(token);
-                var userDetails = userService.loadUserByUsername(email);
-                var auth = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
+                String role = jwtService.extractRole(token);
+
+                // Corrige: se o token vier com número, converta para role correta
+                if ("1".equals(role)) role = "ADMIN";
+                else if ("2".equals(role)) role = "USER";
+
+                var authorities = Collections.singletonList(
+                        new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())
                 );
+
+                var auth = new UsernamePasswordAuthenticationToken(email, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }

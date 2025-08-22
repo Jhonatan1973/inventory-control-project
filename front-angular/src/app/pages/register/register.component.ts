@@ -27,39 +27,41 @@ export class RegisterComponent implements OnInit {
   newUser: UserInterface = this.getEmptyUser();
   originalUser: UserInterface | null = null;
   showConfirm = false;
-  code = '';
-  countdown = 60;
-  codeSent = false;
-  intervalId: any = null;
-  emailPendingConfirmation = '';
-  showCodeModal = false;
-  message = '';
+  loggedUserRole: string = '';
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
+
   ngOnInit() {
+    this.loggedUserRole = localStorage.getItem('role') || '';
     this.loadUsers();
   }
-loadUsers() {
-  this.userService.getUsersBySector().subscribe({
-    next: (data) => {
-      this.users = data;
-      this.filteredUsers = [...this.users];
-      this.totalUsers = this.users.length;
-    },
-    error: (err) => {
-      console.error('Erro ao carregar usuários', err);
-    },
-  });
-}
-
+  canEdit(): boolean {
+    return this.loggedUserRole === 'ADMIN';
+  }
+  canDelete(): boolean {
+    return this.loggedUserRole === 'ADMIN';
+  }
+  canCreate(): boolean {
+    return this.loggedUserRole === 'ADMIN';
+  }
+  loadUsers() {
+    this.userService.getUsersBySector().subscribe({
+      next: (data) => {
+        this.users = data;
+        this.filteredUsers = [...this.users];
+        this.totalUsers = this.users.length;
+      },
+      error: (err) => console.error('Erro ao carregar usuários', err),
+    });
+  }
   getEmptyUser(): UserInterface {
     return {
       id: 0,
       username: '',
       email: '',
       password: '',
-      roleName: 'user',
-      sectorName: '',
+      roleName: localStorage.getItem('role')?.toLowerCase() || 'user',
+      sectorName: localStorage.getItem('sector') || '',
       lastModified: this.getTodayDate(),
     };
   }
@@ -71,82 +73,30 @@ loadUsers() {
       alert('Preencha todos os campos obrigatórios.');
       return;
     }
-    this.userService.createUser(this.newUser).subscribe({
-      next: () => {
-        this.emailPendingConfirmation = this.newUser.email!;
-        this.sendVerificationCode(this.emailPendingConfirmation);
-        this.showCodeModal = true;
-        this.startCountdown();
+    const roleId = Number(localStorage.getItem('roleId')) || 2;
+    const sectorId = Number(localStorage.getItem('sectorId')) || 1;
+    const payload = {
+      username: this.newUser.username,
+      email: this.newUser.email,
+      password: this.newUser.password,
+      roleId,
+      role: { id: roleId, name: this.newUser.roleName.toUpperCase() },
+      sectorId,
+      sector: { id: sectorId, name: this.newUser.sectorName },
+      lastModified: this.getTodayDate()
+    };
+    this.userService.createUser(payload).subscribe({
+      next: (res) => {
         this.closeModal();
+        this.loadUsers();
+        this.resetNewUser();
+        alert('Usuário criado com sucesso!');
       },
       error: (err) => {
         console.error('Erro ao criar usuário:', err);
-        alert('Erro ao criar usuário. Verifique os dados e tente novamente.');
-      },
-    });
-  }
-  sendVerificationCode(email: string) {
-    this.userService.sendVerificationCode(email).subscribe({
-      next: () => {
-        this.codeSent = true;
-        this.message = 'Código enviado para o email.';
-      },
-      error: () => {
-        this.message = 'Erro ao enviar código. Tente novamente.';
-      },
-    });
-  }
-  confirmCode() {
-    this.userService.verifyCode(this.emailPendingConfirmation, this.code).subscribe({
-      next: () => {
-        this.userService.confirmUser(this.emailPendingConfirmation, this.code).subscribe({
-          next: () => {
-            this.loadUsers();
-            this.resetNewUser();
-            this.showCodeModal = false;
-            alert('Usuário confirmado. Um email foi enviado para redefinir a senha.');
-          },
-          error: () => alert('Erro ao confirmar usuário.'),
-        });
-      },
-      error: () => {
-        this.message = 'Código inválido ou expirado.';
-      },
-    });
-  }
-  startCountdown() {
-    this.countdown = 60;
-    if (this.intervalId) clearInterval(this.intervalId);
-    this.intervalId = setInterval(() => {
-      if (this.countdown > 0) {
-        this.countdown--;
-      } else {
-        clearInterval(this.intervalId);
+        alert(err?.error?.message || 'Erro ao criar usuário. Verifique os dados.');
       }
-    }, 1000);
-  }
-  resendCode() {
-    if (this.countdown <= 0) {
-      this.sendVerificationCode(this.emailPendingConfirmation);
-      this.startCountdown();
-    }
-  }
-  searchUsers() {
-    const text = this.searchText.toLowerCase();
-
-    this.filteredUsers = this.users.filter((user) => {
-      const matchesText =
-        user.username?.toLowerCase().includes(text) ||
-        user.email?.toLowerCase().includes(text);
-
-      const matchesRole = this.selectedRole === 'Todos' || user.roleName === this.selectedRole;
-
-      return matchesText && matchesRole;
     });
-  }
-  setRoleFilter(role: 'Todos' | string) {
-    this.selectedRole = role;
-    this.searchUsers();
   }
   openModal() {
     const overlay = document.getElementById('overlay');
@@ -166,19 +116,6 @@ loadUsers() {
     this.showEditCard = false;
     this.selectedUser = null;
     this.showConfirm = false;
-  }
-  saveEdit() {
-    if (this.selectedUser) {
-      const index = this.users.findIndex((u) => u.id === this.selectedUser!.id);
-      if (index > -1) {
-        this.users[index] = {
-          ...this.selectedUser,
-          lastModified: this.getTodayDate(),
-        };
-        this.searchUsers();
-      }
-      this.closeEditCard();
-    }
   }
   askForConfirm() {
     this.showConfirm = true;
@@ -233,6 +170,18 @@ loadUsers() {
       password += charset.charAt(Math.floor(Math.random() * n));
     }
     this.newUser.password = password;
+  }
+  searchUsers() {
+    const text = this.searchText.toLowerCase();
+    this.filteredUsers = this.users.filter(user => {
+      const matchesText = user.username?.toLowerCase().includes(text) || user.email?.toLowerCase().includes(text);
+      const matchesRole = this.selectedRole === 'Todos' || user.roleName === this.selectedRole;
+      return matchesText && matchesRole;
+    });
+  }
+  setRoleFilter(role: 'Todos' | string) {
+    this.selectedRole = role;
+    this.searchUsers();
   }
   getTodayDate(): string {
     const today = new Date();
