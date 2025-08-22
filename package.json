@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run start:front\" \"npm run start:back\"",
-   "start:front": "cd front-angular && dotenv -e .env.local -- ng serve --host 0.0.0.0 --port 4500",
+   "start:front": "cd front-angular && npx dotenv -e .env.local -- ng serve --host 0.0.0.0 --port 4500",
     "start:back": "cd back-spring/controle-estoque && mvn spring-boot:run"
   },
   "repository": {
