@@ -21,15 +21,12 @@ public class JwtFilter extends OncePerRequestFilter {
     public JwtFilter(@NonNull JwtService jwtService) {
         this.jwtService = jwtService;
     }
-
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-
-        // Ignorar OPTIONS (CORS preflight)
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
             filterChain.doFilter(request, response);
@@ -37,8 +34,6 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String path = request.getServletPath();
-
-        // Ignorar rotas de autenticação
         if (path.startsWith("/api/auth/")) {
             filterChain.doFilter(request, response);
             return;
@@ -52,8 +47,6 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtService.isTokenValid(token)) {
                 String email = jwtService.extractEmail(token);
                 String role = jwtService.extractRole(token);
-
-                // Corrige: se o token vier com número, converta para role correta
                 if ("1".equals(role)) role = "ADMIN";
                 else if ("2".equals(role)) role = "USER";
 
