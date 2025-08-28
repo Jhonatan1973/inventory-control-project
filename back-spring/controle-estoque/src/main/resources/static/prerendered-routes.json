@@ -1,0 +1,11 @@
+{
+  "routes": {
+    "/": {},
+    "/config": {},
+    "/home": {},
+    "/login": {},
+    "/register": {},
+    "/stock": {},
+    "/user": {}
+  }
+}
