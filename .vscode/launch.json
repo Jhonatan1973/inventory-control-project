@@ -3,6 +3,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "ControleEstoqueApplication",
+      "request": "launch",
+      "mainClass": "br.org.ccb.estoque.ControleEstoqueApplication",
+      "projectName": "controle-estoque"
+    },
+    {
       "name": "ng serve",
       "type": "chrome",
       "request": "launch",
