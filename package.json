@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:back": "cd back-spring/controle-estoque && mvn spring-boot:run",
-    "start:front": "cd front-angular && ng serve --open --port 4500 --host 0.0.0.0",
+    "start:front": "cd front-angular && ng serve --open --port 4600 --host 0.0.0.0",
     "start": "concurrently \"npm run start:back\" \"npm run start:front\"",
     "build:front": "cd front-angular && npx dotenv-cli -e .env.local -- ng build --configuration production --output-path ../back-spring/controle-estoque/src/main/resources/static",
     "build": "npm run build:front"
