@@ -78,7 +78,6 @@ export class HomeComponent implements OnInit {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         this.temQuantidade = data.length;
-        console.log('Quantidade de itens:', this.temQuantidade);
         if (this.historicoSetor.length > 0) {
           const ultimaData = new Date(this.historicoSetor[0].createdAt);
           this.ultimaAtualizacao = `${ultimaData.getDate().toString().padStart(2, '0')}/${

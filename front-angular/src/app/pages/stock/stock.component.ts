@@ -11,6 +11,7 @@ export interface ProdutoInTable {
   name: string;
   fields: { [campoNome: string]: any };
   qtdAlterar?: number;
+  novaValidade?: string;
 }
 export interface ProdutoInTableModal extends ProdutoInTable {
   qtdAlterar: number;
@@ -54,7 +55,8 @@ export class StockComponent {
   colunas: Coluna[] = [
     { nome: 'Nome', tipo: 'texto', obrigatorio: true },
     { nome: 'Quantidade', tipo: 'número', obrigatorio: true },
-    { nome: 'Validade', tipo: 'data', obrigatorio: false }
+    { nome: 'Validade', tipo: 'data', obrigatorio: true },
+    { nome: 'Max, Med, Min', tipo: 'número', obrigatorio: true }
   ];
 
   itensTabelaSelecionada: ProdutoInTable[] = [];
@@ -109,8 +111,9 @@ export class StockComponent {
     this.descricaoTabela = '';
     this.colunas = [
       { nome: 'Nome', tipo: 'texto', obrigatorio: true },
-      { nome: 'Quantidade', tipo: 'número', obrigatorio: true },
-      { nome: 'Validade', tipo: 'data', obrigatorio: false }
+    { nome: 'Quantidade', tipo: 'número', obrigatorio: true },
+    { nome: 'Validade', tipo: 'data', obrigatorio: true },
+    { nome: 'Max, Med, Min', tipo: 'número', obrigatorio: true }
     ];
   }
   adicionarColuna() { this.colunas.push({ nome: '', tipo: 'texto', obrigatorio: false }); }
@@ -230,10 +233,18 @@ carregarProductsBase() {
   }
 confirmarAlteracao() {
   if (!this.tabelaSelecionada) return;
+
   this.itensTabelaSelecionada.forEach(item => {
+    // Se o item não tem validade e o usuário digitou uma nova, adiciona
+    if (item.novaValidade && (!item.fields['validade'] || item.fields['validade'].length === 0)) {
+      item.fields['validade'] = [item.novaValidade];
+      item.novaValidade = undefined; // limpa depois de salvar
+    }
+
     if (item.qtdAlterar && item.qtdAlterar > 0) {
       const delta = item.qtdAlterar;
       const acao = this.acao === 'adicionar' ? 'adicionar' : 'diminuir';
+
       this.userTableService.atualizarQuantidadeProdutos(
         this.tabelaSelecionada!.id,
         item.id,
@@ -244,16 +255,19 @@ confirmarAlteracao() {
       ).subscribe({
         next: () => {
           const atual = Number(item.fields['quantidade'] ?? 0);
-          item.fields['quantidade'] = acao === 'adicionar' ? atual + delta : Math.max(0, atual - delta);
+          item.fields['quantidade'] =
+            acao === 'adicionar' ? atual + delta : Math.max(0, atual - delta);
           item.qtdAlterar = 0;
         },
         error: (err: any) => console.error('Erro ao atualizar quantidade', err)
       });
     }
   });
+
   alert(`Quantidade ${this.acao === 'adicionar' ? 'adicionada' : 'reduzida'} com sucesso!`);
   this.fecharModalQuantidade();
 }
+
 abrirSidebarProdutos() {
   this.mostrarSidebarProdutos = true;
   this.carregarProductsBase();

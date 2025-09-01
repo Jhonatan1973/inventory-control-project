@@ -129,11 +129,15 @@
 <div class="stock-modal-quantidade" *ngIf="modalQuantidadeAberto && acao === 'adicionar'">
   <div class="stock-modal-quantidade-content">
     <h3>Adicionar Quantidade</h3>
+
     <label>Fornecedor:</label>
     <input type="text" [(ngModel)]="fornecedorGlobal" placeholder="Fornecedor" />
+
     <label>Valor do Produto:</label>
     <input type="number" [(ngModel)]="valorProdutoGlobal" placeholder="Valor do Produto" />
+
     <input type="text" placeholder="Pesquisar produto..." [(ngModel)]="filtro" />
+
     <div class="stock-table-container">
       <table *ngIf="itensTabela.length > 0">
         <thead>
@@ -148,24 +152,46 @@
           <tr *ngFor="let item of filtrarProdutos()">
             <td>{{ item.name }}</td>
             <td>{{ item.fields['quantidade'] ?? 0 }}</td>
+
+            <!-- 🔹 Tratamento da validade -->
             <td *ngIf="colunaExiste('validade')">
-              <span>{{ getValidadePrincipal(item) }}</span>
+              <!-- Se já tem validade -->
+              <span *ngIf="getValidadePrincipal(item) !== '-'">
+                {{ getValidadePrincipal(item) }}
+              </span>
+
+              <!-- Se não tem validade → input para adicionar -->
+              <input
+                *ngIf="getValidadePrincipal(item) === '-'"
+                type="date"
+                [(ngModel)]="item.novaValidade"
+                placeholder="Adicionar validade"
+              />
+
+              <!-- Outras validades -->
               <select *ngIf="getOutrasValidades(item).length > 0">
                 <option *ngFor="let data of getOutrasValidades(item)" [value]="data">{{ data }}</option>
               </select>
             </td>
-            <td><input type="number" [(ngModel)]="item.qtdAlterar" min="0" placeholder="Qtd"></td>
+
+            <!-- Alterar quantidade -->
+            <td>
+              <input type="number" [(ngModel)]="item.qtdAlterar" min="0" placeholder="Qtd" />
+            </td>
           </tr>
         </tbody>
       </table>
+
       <p *ngIf="itensTabela.length === 0">Nenhum item adicionado.</p>
     </div>
+
     <div class="stock-modal-buttons">
       <button type="button" (click)="confirmarAlteracao()">Confirmar</button>
       <button class="btn-cancel" type="button" (click)="fecharModalQuantidade()">Cancelar</button>
     </div>
   </div>
 </div>
+
 <div class="stock-modal-retirar" *ngIf="modalQuantidadeAberto && acao === 'diminuir'">
   <div class="stock-modal-retirar-content">
     <h3>Diminuir Quantidade</h3>
