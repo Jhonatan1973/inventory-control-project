@@ -1,124 +1,199 @@
-#login-background{
+#login-background {
   position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #dbdbdb, #dbdbdb);
+  z-index: -1;
 }
-.user-management-content{
+
+.user-management-content {
   position: relative;
   background-color: #ededed;
-  padding: 260px 120px;
-  width: 1400px;
-  top: 80px;
+  padding: 80px 60px 40px 60px;
+  top: 60px;
+  width: 90%;
+  max-width: 1400px;
+  height: 500px;
+  margin: 20px auto;
   border-radius: 10px;
-  margin: 10px auto;
+  box-sizing: border-box;
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #999 transparent;
+}
 
-  h1{
-    position: relative;
-    margin: -100px;
-    top: -130px;
-  }
-  p{
-    position: relative;
-    margin: -100px;
-    top: -20px;
-  }
+.user-management-content h1 {
+  font-size: 2rem;
+  margin-bottom: 5px;
+  text-align: center;
 }
-.add-user{
-  position: fixed;
-  background-color: #333;
-  color: #ffffff;
-  border-radius: 10px;
-  border: transparent;
-  padding: 5px 20px;
-  margin-left: 1100px;
-  margin-top: 50px;
+
+.user-management-content p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  text-align: center;
 }
-.horizontal-line{
+
+.user-management-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.user-management-content::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 4px;
+}
+
+.user-management-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.user-management-content h1 {
+  font-size: 2rem;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.user-management-content p {
+  font-size: 1rem;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.add-user,
+.btn-notification-user {
   position: relative;
-  background-color: rgb(0, 0, 0);
-  padding: 1px 600px;
-  margin: -100px;
-  margin-top: 100px;
+  margin: 10px auto;
+  display: inline-block;
+  background-color: #333;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  padding: 8px 20px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
 }
-.status-user-content{
+
+.add-user:hover,
+.btn-notification-user:hover {
+  background-color: #555;
+}
+
+.horizontal-line {
+  width: 100%;
+  height: 1px;
+  background-color: #000;
+  margin: 20px 0;
+}
+
+.status-user-content {
   position: relative;
   background-color: transparent;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
-  padding: 172px 10px;
-  width: 800px;
+  padding: 20px;
   border-radius: 10px;
-  margin: -100px;
-  margin-top: 120px;
-  margin-bottom: -240px;
-}
-.input-group{
+  margin-top: 20px;
   display: flex;
-  position: relative;
-  margin-top: -160px;
+  flex-direction: column;
+  gap: 20px;
 }
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.input-group button {
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: #e0e0e0;
+  transition: background-color 0.3s ease;
+}
+
+.input-group button:hover {
+  background-color: #d0d0d0;
+}
+
 .activity-box {
-  height: 250px;
-  width: 780px;
+  width: 100%;
+  max-height: 400px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 15px;
   padding-right: 10px;
-  position: fixed;
-  margin-top: 20px;
   scrollbar-width: thin;
   scrollbar-color: #999 transparent;
 }
+
 .activity-box::-webkit-scrollbar {
   width: 6px;
 }
+
 .activity-box::-webkit-scrollbar-thumb {
   background-color: #999;
   border-radius: 4px;
 }
+
 .line-activity {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 16px 20px;
   border-left: 5px solid #535353;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
 }
-.user-info {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
+
 .user-info h3 {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
   color: #333;
 }
+
 .user-info p {
-  margin: 20px 0 0;
+  margin: 5px 0 0 0;
   font-size: 0.95rem;
   color: #555;
 }
+
 .user-details {
   display: flex;
   flex-direction: column;
   font-size: 0.85rem;
   color: #444;
-  flex: 1;
   gap: 2px;
 }
+
 .data-alteracao {
   color: #777;
   font-size: 0.85rem;
 }
+
 .user-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .change-user,
 .delete-user {
   background: none;
@@ -126,506 +201,193 @@
   cursor: pointer;
   padding: 6px;
 }
+
 .change-user img,
 .delete-user img {
   width: 20px;
   height: 20px;
 }
-.user-activity-conta2nt {
+
+.user-activity-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 1080px;
-  margin-bottom: -400px;
-  margin-top: -49px;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
 }
+
 .user-activity {
-  padding: 50px 50px;
-  width: 500px;
-  height: 90px;
+  padding: 20px;
+  width: 250px;
   background-color: #ededed;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
-  margin-bottom: 20px;
-
-  h3 {
-    font-size: 15px;
-    margin-left: -30px;
-    margin-top: -25px;
-  }
-  p {
-    font-size: 30px;
-    margin-top: -10px;
-    margin-left: -30px;
-  }
-  img {
-    margin-left: 400px;
-    margin-top: -70px;
-  }
-}
-.card-add-users {
-  background-color: #fff;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  width: 400px;
-  max-width: 90%;
-  padding: 30px 40px;
-  position: fixed;
-  z-index: 4;
-  font-family: 'Segoe UI', sans-serif;
-  transition: all 0.3s ease;
-}
-.card-add-users-overlay {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(128, 128, 128, 0.7);
-  z-index: 2; 
-  justify-content: center;
-  align-items: center;
-}
-.card-add-users h2 {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
   text-align: center;
-  color: #333;
-  position: relative;
 }
-.card-add-users img {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-.card-add-users img:hover {
-  transform: scale(1.2);
-  opacity: 1;
-}
-.card-add-users p {
-  margin: 15px 0 -10px;
-  font-weight: 500;
-  font-size: 0.95rem;
-  color: #555;
-}
-.card-add-users input[type="text"] {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  outline: none;
+
+.user-activity h3 {
   font-size: 1rem;
   margin-bottom: 10px;
-  transition: border-color 0.3s ease;
 }
-.card-add-users input[type="text"]:focus {
-  border-color: #000000;
+
+.user-activity p {
+  font-size: 1.5rem;
+  margin: 10px 0;
 }
-.card-add-users select, 
-.card-add-users option {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  outline: none;
-  font-size: 1rem;
+
+.user-activity img {
+  width: 40px;
+  height: 40px;
   margin-bottom: 10px;
-  transition: border-color 0.3s ease;
 }
-.card-add-users select:focus {
-  border-color: #000000;
-}
-.card-add-users option:focus {
-  border-color: #000000;
-  color: white;
-  background-color: #333;
-}
-.card-add-users button {
-  margin-top: 20px;
-  width: 100%;
-  background-color: #bdbdbd;
-  color: white;
-  font-weight: bold;
-  padding: 12px 0;
-  border-radius: 10px;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-.card-add-users button:hover {
-  background-color: #717171;
-}
-@media (max-width: 500px) {
-  .card-add-users {
-    padding: 20px;
-  }
-  .card-add-users h2 {
-    font-size: 1.5rem;
-  }
-  .card-add-users input[type="text"] {
-    font-size: 0.95rem;
-  }
-}
-@media (max-width: 968px) {
-  .user-management-content {
-    order: 2;
-    width: 90%;
-    padding: 160px 20px;
-    margin: 0 auto;
-    top: 60px;
-  }
-  .user-management-content h1 {
-    margin: 0;
-    margin-top: -140px;
-    text-align: center;
-    position: static;
-  }
-  .user-management-content p {
-    margin: 0;
-    margin-top: 10px;
-    text-align: center;
-    position: static;
-  }
-  .add-user {
-    position: relative;
-    margin: 20px auto;
-    display: block;
-    text-align: center;
-  }
-  .horizontal-line {
-    padding: 1px;
-    width: 80%;
-    margin: 40px auto;
-  }
-  .status-user-content {
-    width: 90%;
-    padding: 80px 20px;
-    margin: 40px auto;
-    box-sizing: border-box;
-  }
-  .input-group {
-    display: flex;
-    align-items: center;
-    gap: 0px;
-    flex-wrap: nowrap;
-    margin-top: -50px;
-    width: 100%;
 
-    .form-control {
-      flex: 1;
-      min-width: 0;
-    }
-    .btn {
-      white-space: nowrap;
-    }
-  }
-  .activity-box {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    padding: 10px;
-    margin: 30px auto;
-  }
-  .line-activity {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .user-info, .user-details {
-    width: 100%;
-  }
-  .user-actions {
-    justify-content: flex-start;
-  }
-  .user-activity {
-    order: 1;
-    width: 90%;
-    padding: 30px 20px;
-    height: auto;
-    text-align: center;
-
-    h3, p {
-      margin-left: 0;
-    }
-    img {
-      margin: 10px auto 0 auto;
-      display: block;
-    }
-  }
-  .user-activity-conta2nt {
-    margin: 40px auto 0 auto;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-  }
-  #login-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-  }
-}
-.container-register {
-  padding: 30px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f8;
-  min-height: 100vh;
-}
-.title {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-.search-filter-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.search-filter-container input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  outline: none;
-  font-size: 1rem;
-}
-.role-buttons {
-  display: flex;
-  gap: 10px;
-}
-.role-buttons button {
-  padding: 10px 15px;
-  border: none;
-  background-color: #e0e0e0;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-.role-buttons button.active,
-.role-buttons button:hover {
-  background-color: #4a90e2;
-  color: white;
-}
-.user-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
-.user-table th,
-.user-table td {
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid #f0f0f0;
-}
-.user-table th {
-  background-color: #f7f9fb;
-  font-weight: bold;
-}
-.user-table td:last-child {
-  text-align: right;
-}
-.user-table tr:hover {
-  background-color: #f2f4f7;
-}
-.edit-btn {
-  background-color: #4caf50;
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-.edit-btn:hover {
-  background-color: #388e3c;
-}
-#overlay {
-  display: none;
+.modal-novo-usuario-overlay,
+.notif-modal-overlay,
+.edit-user-modal-overlay,
+.delete-user-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;
+  overflow-y: auto;
+  padding: 20px;
 }
-.modal-card {
-  background-color: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 500px;
-  animation: slideUp 0.3s ease-out;
-}
-@keyframes slideUp {
-  from {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-.modal-card h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-.modal-card input,
-.modal-card select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-.modal-buttons {
+
+.modal-novo-usuario-conteudo,
+.notif-modal-container,
+.edit-user-modal-container,
+.delete-user-modal-container {
+  background-color: #fff;
+  border-radius: 10px;
+  width: 400px;
+  max-height: 90vh;
+  padding: 20px;
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
-.modal-buttons button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
+
+.modal-novo-usuario-titulo,
+.notif-modal-title,
+.edit-user-modal-title,
+.delete-user-modal-title {
+  font-size: 1.25rem;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.modal-novo-usuario-close,
+.notif-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
   cursor: pointer;
+  width: 20px;
+  height: 20px;
 }
-.modal-buttons .cancel {
-  background-color: #e53935;
-  color: white;
-}
-.modal-buttons .save {
-  background-color: #4a90e2;
-  color: white;
-}
-.confirm-modal {
-  margin-top: 20px;
-  border-top: 1px solid #ccc;
-  padding-top: 15px;
-}
-.confirm-modal p {
-  margin: 0 0 10px 0;
-}
-.confirm-modal ul {
-  list-style: none;
-  padding-left: 0;
-}
-.confirm-modal li {
-  margin-bottom: 5px;
-}
-.btn-confirm {
-  background-color: #4caf50;
-  color: white;
-  margin-right: 10px;
-  padding: 6px 12px;
-  border: none;
-  cursor: pointer;
-}
-.btn-cancel {
-  background-color: #f44336;
-  color: white;
-  padding: 6px 12px;
-  border: none;
-  cursor: pointer;
-}
-input[readonly] {
-  background-color: #f5f5f5;
+
+.modal-novo-usuario-input,
+.modal-novo-usuario-select,
+.notif-modal-input,
+.notif-modal-select,
+.notif-modal-select-multi,
+.notif-modal-textarea,
+.edit-user-modal-input,
+.edit-user-modal-select,
+.delete-user-modal-input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  cursor: not-allowed;
+  font-size: 0.95rem;
+  box-sizing: border-box;
 }
+
+.notif-modal-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+input[readonly],
 select:disabled {
   background-color: #f5f5f5;
   cursor: not-allowed;
 }
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+
+.modal-novo-usuario-botoes,
+.notif-modal-buttons,
+.edit-user-modal-buttons,
+.edit-user-confirm-buttons,
+.delete-user-modal-buttons {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.modal-content {
-  background-color: #fff;
-  padding: 94px 92px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  max-width: 700px;
-  width: 90%;
-  text-align: center;
-}
-.modal-content h3 {
-  margin-bottom: 16px;
-  font-size: 1.25rem;
-  color: #333;
-}
-.modal-content p {
-  margin-bottom: 20px;
-  color: #555;
-  font-size: 1rem;
-}
-.modal-content input[type="text"] {
-  width: 100%;
-  padding: 10px 12px;
-  font-size: 1rem;
-  border: 1.5px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 24px;
-  transition: border-color 0.2s ease;
-}
-.modal-content input[type="text"]:focus {
-  border-color: #007bff;
-  outline: none;
-}
-.modal-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-.modal-buttons button {
-  padding: 5px 20px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  justify-content: flex-end;
+  gap: 10px;
   margin-top: 10px;
-  margin-bottom: -70px;
 }
-.modal-buttons button:first-child {
-  background-color: #ff0000;
-  color: white;
+
+.modal-novo-usuario-btn-gerar,
+.modal-novo-usuario-btn-confirmar,
+.notif-modal-btn-send,
+.edit-user-btn-save,
+.edit-user-btn-confirm,
+.delete-user-btn-confirm {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
 }
-.modal-buttons button:first-child:disabled {
-  background-color: #d04f4f;
-  cursor: not-allowed;
+
+.modal-novo-usuario-btn-gerar:hover,
+.modal-novo-usuario-btn-confirmar:hover,
+.notif-modal-btn-send:hover,
+.edit-user-btn-save:hover,
+.edit-user-btn-confirm:hover,
+.delete-user-btn-confirm:hover {
+  background-color: #0056b3;
 }
-.modal-buttons button:last-child {
-  background-color: #e0e0e0;
-  color: #333;
+
+.modal-novo-usuario-btn-cancel,
+.notif-modal-btn-cancel,
+.edit-user-btn-cancel,
+.delete-user-btn-cancel {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
 }
-.modal-buttons button:last-child:hover {
-  background-color: #c7c7c7;
+
+.modal-novo-usuario-btn-cancel:hover,
+.notif-modal-btn-cancel:hover,
+.edit-user-btn-cancel:hover,
+.delete-user-btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+@media screen and (max-width: 768px) {
+  .user-management-content {
+    padding: 60px 20px;
+  }
+
+  .user-activity-conta2nt {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .line-activity {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

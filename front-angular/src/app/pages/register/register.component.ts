@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TopbarComponent } from '../../components/topbar/topbar.component';
 import { MenuDesktopComponent } from '../../components/menu-desktop/menu-desktop.component';
+import { NotificationService, Notificacao } from '../../services/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -14,36 +15,44 @@ import { MenuDesktopComponent } from '../../components/menu-desktop/menu-desktop
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
+  showNotificationModal = false;
+  showEditCard = false;
+  showDeleteModal = false;
+  showConfirm = false;
+  showNewUserModal = false;
+
   users: UserInterface[] = [];
   filteredUsers: UserInterface[] = [];
   totalUsers = 0;
   searchText = '';
   selectedRole: 'Todos' | string = 'Todos';
   selectedUser: UserInterface | null = null;
-  showEditCard = false;
-  showDeleteModal = false;
   userToDelete: UserInterface | null = null;
   deleteConfirmationText = '';
-  newUser: UserInterface = this.getEmptyUser();
   originalUser: UserInterface | null = null;
-  showConfirm = false;
   loggedUserRole: string = '';
 
-  constructor(private userService: UserService) { }
+  newUser: UserInterface = this.getEmptyUser();
 
+  newNotification = {
+    titulo: '',
+    descricao: '',
+    hora: '',
+    destinatarios: [] as string[],
+    tipo: 'Urgência',
+  };
+
+  constructor(
+    private userService: UserService,
+    private notificationService: NotificationService
+  ) { }
   ngOnInit() {
     this.loggedUserRole = localStorage.getItem('role') || '';
     this.loadUsers();
   }
-  canEdit(): boolean {
-    return this.loggedUserRole === 'ADMIN';
-  }
-  canDelete(): boolean {
-    return this.loggedUserRole === 'ADMIN';
-  }
-  canCreate(): boolean {
-    return this.loggedUserRole === 'ADMIN';
-  }
+  canEdit() { return this.loggedUserRole === 'ADMIN'; }
+  canDelete() { return this.loggedUserRole === 'ADMIN'; }
+  canCreate() { return this.loggedUserRole === 'ADMIN'; }
   loadUsers() {
     this.userService.getUsersBySector().subscribe({
       next: (data) => {
@@ -86,8 +95,8 @@ export class RegisterComponent implements OnInit {
       lastModified: this.getTodayDate()
     };
     this.userService.createUser(payload).subscribe({
-      next: (res) => {
-        this.closeModal();
+      next: () => {
+        this.closeNewUserModal();
         this.loadUsers();
         this.resetNewUser();
         alert('Usuário criado com sucesso!');
@@ -98,79 +107,48 @@ export class RegisterComponent implements OnInit {
       }
     });
   }
-  openModal() {
-    const overlay = document.getElementById('overlay');
-    if (overlay) overlay.style.display = 'flex';
-  }
-  closeModal() {
-    const overlay = document.getElementById('overlay');
-    if (overlay) overlay.style.display = 'none';
-  }
   editUser(user: UserInterface) {
     this.selectedUser = { ...user };
     this.originalUser = { ...user };
     this.showEditCard = true;
     this.showConfirm = false;
   }
-  closeEditCard() {
-    this.showEditCard = false;
-    this.selectedUser = null;
-    this.showConfirm = false;
-  }
-  askForConfirm() {
-    this.showConfirm = true;
-  }
   confirmSave() {
-    if (this.selectedUser) {
-      this.userService.updateUser(this.selectedUser).subscribe({
-        next: (updatedUser) => {
-          const index = this.users.findIndex((u) => u.id === updatedUser.id);
-          if (index > -1) {
-            this.users[index] = updatedUser;
-            this.searchUsers();
-          }
-          this.closeEditCard();
-        },
-        error: (err) => {
-          console.error('Erro ao atualizar usuário:', err);
-          alert('Erro ao atualizar usuário. Tente novamente.');
-        },
-      });
-    }
+    if (!this.selectedUser) return;
+    this.userService.updateUser(this.selectedUser).subscribe({
+      next: (updatedUser) => {
+        const index = this.users.findIndex(u => u.id === updatedUser.id);
+        if (index > -1) this.users[index] = updatedUser;
+        this.searchUsers();
+        this.closeEditCard();
+      },
+      error: () => alert('Erro ao atualizar usuário. Tente novamente.')
+    });
   }
-  cancelSave() {
-    this.showConfirm = false;
-  }
+  cancelSave() { this.showConfirm = false; }
   openDeleteModal(user: UserInterface) {
     this.userToDelete = user;
     this.deleteConfirmationText = '';
     this.showDeleteModal = true;
   }
-  closeDeleteModal() {
-    this.showDeleteModal = false;
-    this.userToDelete = null;
-    this.deleteConfirmationText = '';
-  }
   confirmDelete() {
     if (this.userToDelete && this.deleteConfirmationText === this.userToDelete.username) {
       this.userService.deleteUser(this.userToDelete.id!).subscribe(() => {
-        this.users = this.users.filter((u) => u.id !== this.userToDelete!.id);
+        this.users = this.users.filter(u => u.id !== this.userToDelete!.id);
         this.closeDeleteModal();
         this.searchUsers();
       });
-    } else {
-      alert('Digite corretamente o nome do usuário para confirmar a exclusão.');
-    }
+    } else alert('Digite corretamente o nome do usuário para confirmar a exclusão.');
   }
-  generateRandomPassword() {
-    const length = 12;
-    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
-    let password = '';
-    for (let i = 0, n = charset.length; i < length; ++i) {
-      password += charset.charAt(Math.floor(Math.random() * n));
-    }
-    this.newUser.password = password;
+  openNewUserModal() {
+    this.resetNewUser();
+    this.showNewUserModal = true;
   }
+  closeNewUserModal() {
+    this.showNewUserModal = false;
+  }
+  closeEditCard() { this.showEditCard = false; this.selectedUser = null; this.showConfirm = false; }
+  closeDeleteModal() { this.showDeleteModal = false; this.userToDelete = null; this.deleteConfirmationText = ''; }
   searchUsers() {
     const text = this.searchText.toLowerCase();
     this.filteredUsers = this.users.filter(user => {
@@ -179,28 +157,49 @@ export class RegisterComponent implements OnInit {
       return matchesText && matchesRole;
     });
   }
-  setRoleFilter(role: 'Todos' | string) {
-    this.selectedRole = role;
-    this.searchUsers();
+  setRoleFilter(role: 'Todos' | string) { this.selectedRole = role; this.searchUsers(); }
+  generateRandomPassword() {
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+    let password = '';
+    for (let i = 0; i < 12; i++) password += charset.charAt(Math.floor(Math.random() * charset.length));
+    this.newUser.password = password;
   }
   getTodayDate(): string {
     const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = String(today.getFullYear()).slice(2);
-    return `${day}/${month}/${year}`;
+    return `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getFullYear()).slice(2)}`;
   }
   formatDateTime(dateString?: string): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
     const utc = date.getTime() + date.getTimezoneOffset() * 60000;
-    const brasiliaOffset = -3 * 60;
-    const brasiliaDate = new Date(utc + brasiliaOffset * 60000);
-    const day = String(brasiliaDate.getDate()).padStart(2, '0');
-    const month = String(brasiliaDate.getMonth() + 1).padStart(2, '0');
-    const year = brasiliaDate.getFullYear();
-    const hours = String(brasiliaDate.getHours()).padStart(2, '0');
-    const minutes = String(brasiliaDate.getMinutes()).padStart(2, '0');
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
+    const brasiliaDate = new Date(utc + -3 * 60 * 60000);
+    return `${String(brasiliaDate.getDate()).padStart(2, '0')}/${String(brasiliaDate.getMonth() + 1).padStart(2, '0')}/${brasiliaDate.getFullYear()} ${String(brasiliaDate.getHours()).padStart(2, '0')}:${String(brasiliaDate.getMinutes()).padStart(2, '0')}`;
   }
+  openModalNotification() {
+    this.showNotificationModal = true;
+    this.newNotification.destinatarios = this.users.map(u => u.username!);
+    this.newNotification.titulo = '';
+    this.newNotification.descricao = '';
+    this.newNotification.hora = '';
+  }
+  closeModalNotification() { this.showNotificationModal = false; }
+  sendNotification() {
+    if (!this.newNotification.titulo || !this.newNotification.descricao || this.newNotification.destinatarios.length === 0) {
+      alert('Preencha todos os campos e selecione pelo menos um destinatário.');
+      return;
+    }
+    const sectorId = Number(localStorage.getItem('sectorId')) || 1;
+    const notificacao: Notificacao = {
+      titulo: `(${this.newNotification.tipo}) ${this.newNotification.titulo}`,
+      mensagem: this.newNotification.descricao,
+      dataCriacao: new Date().toISOString(),
+      lida: false,
+      sectorId
+    };
+    this.notificationService.criarNotificacao(notificacao).subscribe({
+      next: () => { alert('Notificação enviada com sucesso!'); this.closeModalNotification(); },
+      error: (err) => { console.error('Erro ao enviar notificação', err); alert('Erro ao enviar notificação.'); }
+    });
+  }
+  askForConfirm() { this.showConfirm = true; }
 }

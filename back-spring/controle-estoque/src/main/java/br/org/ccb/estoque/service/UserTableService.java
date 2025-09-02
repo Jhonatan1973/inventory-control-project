@@ -34,7 +34,8 @@ public class UserTableService {
             jsonMap = objectMapper.convertValue(node, Map.class);
         }
 
-        List<Map<String, Object>> itens = (List<Map<String, Object>>) jsonMap.getOrDefault("itens", new ArrayList<Map<String,Object>>());
+        List<Map<String, Object>> itens = (List<Map<String, Object>>) jsonMap.getOrDefault("itens",
+                new ArrayList<Map<String, Object>>());
         Map<String, Object> itemExistente = itens.stream()
                 .filter(item -> produtoId.equals(Long.valueOf(String.valueOf(item.get("id")))))
                 .findFirst()
@@ -65,7 +66,8 @@ public class UserTableService {
             jsonMap = objectMapper.convertValue(node, Map.class);
         }
 
-        List<Map<String, Object>> itens = (List<Map<String, Object>>) jsonMap.getOrDefault("itens", new ArrayList<Map<String,Object>>());
+        List<Map<String, Object>> itens = (List<Map<String, Object>>) jsonMap.getOrDefault("itens",
+                new ArrayList<Map<String, Object>>());
 
         boolean produtoExistente = itens.stream()
                 .anyMatch(item -> produto.getId().equals(Long.valueOf(String.valueOf(item.get("id")))));
@@ -85,7 +87,8 @@ public class UserTableService {
         List<String> validadeArray = new ArrayList<>();
         Object novaVal = produto.getFields().get("validadeArray");
         if (novaVal instanceof List<?>) {
-            for (Object o : (List<?>) novaVal) validadeArray.add(String.valueOf(o));
+            for (Object o : (List<?>) novaVal)
+                validadeArray.add(String.valueOf(o));
         }
         itemMap.put("validadeArray", validadeArray);
 
@@ -110,7 +113,8 @@ public class UserTableService {
             jsonMap.put("colunas", objectMapper.readValue(columnsJson, List.class));
             jsonMap.put("itens", new ArrayList<>());
 
-            String sql = "INSERT INTO user_tables (user_id, sector_id, name_table, description_table, columns_structure) " +
+            String sql = "INSERT INTO user_tables (user_id, sector_id, name_table, description_table, columns_structure) "
+                    +
                     "VALUES (:userId, :sectorId, :tableName, :description, CAST(:columnsJson AS JSONB))";
 
             MapSqlParameterSource params = new MapSqlParameterSource()

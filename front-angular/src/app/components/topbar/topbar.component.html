@@ -3,80 +3,120 @@
     <a class="navbar-brand" href="/home">
       <img src="/logoCCB-trans.png" alt="Logo" width="80" height="40" />
     </a>
-
     <div class="topbar-text-content d-flex align-items-center">
       <div>
         <h1>Sistema de Estoque</h1>
-        <!--<p>Brás</p>  Somente quando ele fizer login, para puxar o setor dele-->
       </div>
     </div>
-<div *ngIf="isLoggedIn" class="topbar-user-section d-flex align-items-center">
-  <div class="topbar-user-info">
-    <h2>{{ username }}</h2>
-    <p>{{ sector }}</p>
-  </div>
-  <button *ngIf="isLoggedIn" (click)="logout()" id="logout-btn" class="logout-button">
-    <img src="/topbar/logo-exit.png" alt="">
-    <p >Sair</p>
-  </button>
-</div>
-    <button *ngIf="isLoggedIn" id="menu-button-mobile" class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Menu</button>
-
+    <button type="button" class="btn-notification" (click)="abrirModalNotificacao()">
+      <img src="/topbar/notificacao.png" alt="" class="notification-sino">
+      <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger"
+        id="notification-badge">
+        {{ notificacoes.length }}
+        <span class="visually-hidden">unread messages</span>
+      </span>
+    </button>
+    <div id="modal-notificacao" class="modal-notification" *ngIf="modalNotificacaoAberto">
+      <div class="modal-content-notificacao">
+        <div class="modal-header-notificacao">
+          <h2>Notificações</h2>
+          <span class="close-notificacao" (click)="fecharModalNotificacao()">&times;</span>
+        </div>
+        <div class="filtro-date-buttons">
+          <button type="button" (click)="abrirFiltroDataModal()">Abrir Filtro de Datas</button>
+        </div>
+        <div class="filtro-status-select">
+          <label for="statusFilter" class="form-label">Filtrar por Status:</label>
+          <select id="statusFilter" class="form-select" [(ngModel)]="filtroStatus"
+            (change)="filtrarPorStatus(filtroStatus)" aria-label="Filtro de status">
+            <option value="Todos" selected>Todos</option>
+            <option value="Urgência">Urgência</option>
+            <option value="Comunicado">Comunicado</option>
+            <option value="Atenção">Atenção</option>
+          </select>
+        </div>
+        <div class="notif-modal-actions" *ngIf="isAdmin" style="margin-top: 10px; text-align: right;">
+          <button type="button" class="btn btn-danger" (click)="apagarTodasNotificacoes()">
+            Apagar Todas
+          </button>
+        </div>
+        <div class="historico-acoes">
+          <h2>Últimos Avisos</h2>
+          <div class="caixa-atividades">
+            <div *ngFor="let n of notificacoesFiltradas" class="linha-atividade">
+              <h3>{{ n.titulo }}</h3>
+              <p>{{ n.mensagem }}</p>
+              <span class="data-alteracao">{{ n.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-filtro-datas" [ngStyle]="{ display: modalFiltroAberto ? 'flex' : 'none' }">
+      <div class="modal-filtro-conteudo">
+        <div class="modal-filtro-header">
+          <h3>Filtrar por Datas</h3>
+          <span *ngIf="!modalFixo" class="fechar-modal" (click)="fecharFiltroDataModal()">&times;</span>
+        </div>
+        <div class="modal-filtro-body">
+          <label>De:</label>
+          <input type="date" [(ngModel)]="filtroDataInicio" />
+          <label>Até:</label>
+          <input type="date" [(ngModel)]="filtroDataFim" />
+          <div class="modal-filtro-botoes">
+            <button (click)="filtrarPorData()">Filtrar</button>
+            <button (click)="limparFiltro()">Limpar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isLoggedIn" class="topbar-user-section d-flex align-items-center">
+      <div class="topbar-user-info">
+        <h2>{{ username }}</h2>
+        <p>{{ sector }}</p>
+      </div>
+      <button *ngIf="isLoggedIn" (click)="logout()" id="logout-btn" class="logout-button">
+        <img src="/topbar/logo-exit.png" alt="">
+        <p>Sair</p>
+      </button>
+    </div>
+    <button *ngIf="isLoggedIn" id="menu-button-mobile" class="btn btn-secondary" type="button"
+      data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Menu</button>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
       <div class="offcanvas-header" id="offcanvasRightLabel">
         <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
+      </div>
       <div class="offcanvas-body d-md-none flex-column">
         <div class="btn-group-vertical" style="display: flex;" role="group" aria-label="Vertical button group">
           <div class="btn-group-vertical" style="display: flex;" role="group" aria-label="Vertical button group">
             <input type="radio" name="navItem" id="navRadio01" hidden [checked]="currentRoute === '/home'">
-            <label id="label-navRadio01" for="navRadio01"
-              class="btn btn-secondary nav-button"
-              [class.active]="currentRoute === '/home'"
-              (click)="navigateTo('/home')">
+            <label id="label-navRadio01" for="navRadio01" class="btn btn-secondary nav-button"
+              [class.active]="currentRoute === '/home'" (click)="navigateTo('/home')">
               <img src="menu/graphic-icon.png" alt="Ícone"> Visão Geral
             </label>
-
             <input type="radio" name="navItem" id="navRadio02" hidden [checked]="currentRoute === '/stock'">
-            <label id="label-navRadio02" for="navRadio02"
-              class="btn btn-secondary nav-button"
-              [class.active]="currentRoute === '/stock'"
-              (click)="navigateTo('/stock')">
+            <label id="label-navRadio02" for="navRadio02" class="btn btn-secondary nav-button"
+              [class.active]="currentRoute === '/stock'" (click)="navigateTo('/stock')">
               <img src="menu/table-icon.png" alt="Ícone"> Estoque
             </label>
-
             <input type="radio" name="navItem" id="navRadio03" hidden [checked]="currentRoute === '/usuario'">
-            <label id="label-navRadio03" for="navRadio03"
-              class="btn btn-secondary nav-button"
-              [class.active]="currentRoute === '/usuario'"
-              (click)="navigateTo('/user')">
+            <label id="label-navRadio03" for="navRadio03" class="btn btn-secondary nav-button"
+              [class.active]="currentRoute === '/usuario'" (click)="navigateTo('/user')">
               <img src="menu/user-icon.png" alt="Ícone"> Perfil
             </label>
-
             <input type="radio" name="navItem" id="navRadio04" hidden [checked]="currentRoute === '/config'">
-            <label id="label-navRadio04" for="navRadio04"
-              class="btn btn-secondary nav-button"
-              [class.active]="currentRoute === '/config'"
-              (click)="navigateTo('/config')">
+            <label id="label-navRadio04" for="navRadio04" class="btn btn-secondary nav-button"
+              [class.active]="currentRoute === '/config'" (click)="navigateTo('/config')">
               <img src="menu/setting-icon.png" alt="Ícone"> Configurações
             </label>
-
-<input type="radio" name="navItem" id="navRadio06" hidden />
-<label
-  id="label-navRadio06"
-  for="navRadio06"
-  class="btn btn-secondary nav-button"
-  (click)="navigateTo('/register')"
->
-  <img src="menu/user-icon.png" alt="Ícone" /> Gerenciar
-</label>
-
-
+            <input type="radio" name="navItem" id="navRadio06" hidden />
+            <label id="label-navRadio06" for="navRadio06" class="btn btn-secondary nav-button"
+              (click)="navigateTo('/register')">
+              <img src="menu/user-icon.png" alt="Ícone" /> Gerenciar
+            </label>
             <input type="radio" name="navItem" id="navRadio05" hidden>
-            <label id="label-navRadio05" for="navRadio05"
-              class="btn btn-secondary nav-button"
-              (click)="logout()">
+            <label id="label-navRadio05" for="navRadio05" class="btn btn-secondary nav-button" (click)="logout()">
               <img src="/topbar/logo-exit.png" alt="Ícone"> Sair
             </label>
           </div>

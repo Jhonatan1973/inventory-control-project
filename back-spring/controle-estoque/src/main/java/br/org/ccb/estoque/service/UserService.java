@@ -14,11 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class UserService implements UserDetailsService {
 
     @Autowired
-    private UserRepository repo;
+    private UserRepository userRepo;
 
     @Autowired
     private RoleRepository roleRepo;
@@ -31,16 +32,20 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = repo.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         String roleName = user.getRole() != null ? user.getRole().getName() : "";
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                List.of(() -> roleName)
-        );
+                List.of(() -> roleName));
+    }
+
+    public Sector getSectorByName(String sectorName) {
+        return sectorRepo.findByName(sectorName)
+                .orElseThrow(() -> new RuntimeException("Sector not found"));
     }
 
     public User createUser(String username, String email, String password, String roleName, String sectorName) {
@@ -48,13 +53,21 @@ public class UserService implements UserDetailsService {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
+
         Role role = roleRepo.findByName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role não encontrado: " + roleName));
+                .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
         user.setRole(role);
+
         Sector sector = sectorRepo.findByName(sectorName)
-                .orElseThrow(() -> new RuntimeException("Sector não encontrado: " + sectorName));
+                .orElseThrow(() -> new RuntimeException("Sector not found: " + sectorName));
         user.setSector(sector);
 
-        return repo.save(user);
+        return userRepo.save(user);
+    }
+
+    public Sector getSectorByUserId(Long userId) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getSector();
     }
 }

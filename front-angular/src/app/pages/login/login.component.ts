@@ -52,7 +52,9 @@ export class LoginComponent implements OnDestroy {
           storage.setItem('username', res.username);
           storage.setItem('role', res.roleName);
           storage.setItem('sector', res.sectorName);
+          storage.setItem('sectorId', res.sectorId?.toString() || '');
           this.router.navigate(['/home']);
+          console.log(res.sectorId);
         },
         error: (err) => {
           console.error('Erro ao fazer login:', err);

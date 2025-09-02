@@ -52,13 +52,11 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
-    // -------------------- LOGIN --------------------
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {
             authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 
             Optional<User> userOpt = repo.findByEmail(user.getEmail());
             if (userOpt.isEmpty()) {
@@ -73,7 +71,8 @@ public class AuthController {
             String sectorName = foundUser.getSector() != null ? foundUser.getSector().getName() : null;
             String token = jwtService.generateToken(foundUser.getEmail(), roleName);
 
-            LoginResponseDTO response = new LoginResponseDTO(token, foundUser.getUsername(), roleName, sectorName);
+            LoginResponseDTO response = new LoginResponseDTO(token, foundUser.getUsername(), roleName, sectorName,
+                    foundUser.getSector().getId());
             return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException e) {
@@ -83,7 +82,6 @@ public class AuthController {
         }
     }
 
-    // -------------------- LOGOUT --------------------
     @PostMapping("/auth/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
         try {
@@ -105,7 +103,6 @@ public class AuthController {
         }
     }
 
-    // -------------------- ENVIO E VERIFICAÇÃO DE CÓDIGO --------------------
     @PostMapping("/auth/sendVerificationCode")
     public ResponseEntity<?> sendVerificationCode(@RequestBody Map<String, String> body) {
         String email = body.get("email");
@@ -156,32 +153,25 @@ public class AuthController {
         repo.save(user);
 
         String resetToken = UUID.randomUUID().toString();
-        String resetLink = "http://localhost:4500/reset-password?token=" + resetToken;
+        String resetLink = "http://10.1.0.45:4600/reset-password?token=" + resetToken;
         emailService.sendPasswordResetEmail(email, resetLink);
 
         return ResponseEntity.ok("Usuário confirmado e email para redefinir senha enviado");
     }
 
-    // -------------------- CRUD DE USUÁRIOS --------------------
     @PostMapping("/users")
     @PermitAll
     public ResponseEntity<?> createUser(@RequestBody User newUser) {
 
-        // Valida campos obrigatórios
         if (newUser.getUsername() == null || newUser.getEmail() == null
                 || newUser.getRole() == null || newUser.getPassword() == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Campos obrigatórios faltando"));
         }
-
-        // Verifica se email já existe
         if (repo.findByEmail(newUser.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Email já cadastrado"));
         }
-
-        // Criptografa senha
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
-        // Set setor e role corretamente
         if (newUser.getRole() != null) {
             Role role = roleRepo.findById(newUser.getRole().getId())
                     .orElseThrow(() -> new RuntimeException("Role não encontrado"));
@@ -206,8 +196,7 @@ public class AuthController {
 
         return ResponseEntity.ok(Map.of(
                 "message", "Usuário criado com sucesso. Um código foi enviado para o email para confirmação.",
-                "userId", savedUser.getId()
-        ));
+                "userId", savedUser.getId()));
     }
 
     @PutMapping("/users/{id}")
@@ -218,10 +207,14 @@ public class AuthController {
         }
 
         User existingUser = existingUserOpt.get();
-        if (updatedUser.getUsername() != null) existingUser.setUsername(updatedUser.getUsername());
-        if (updatedUser.getEmail() != null) existingUser.setEmail(updatedUser.getEmail());
-        if (updatedUser.getRole() != null) existingUser.setRole(updatedUser.getRole());
-        if (updatedUser.getSector() != null) existingUser.setSector(updatedUser.getSector());
+        if (updatedUser.getUsername() != null)
+            existingUser.setUsername(updatedUser.getUsername());
+        if (updatedUser.getEmail() != null)
+            existingUser.setEmail(updatedUser.getEmail());
+        if (updatedUser.getRole() != null)
+            existingUser.setRole(updatedUser.getRole());
+        if (updatedUser.getSector() != null)
+            existingUser.setSector(updatedUser.getSector());
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
             existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
@@ -270,7 +263,6 @@ public class AuthController {
         return ResponseEntity.ok(usersSameSector);
     }
 
-    // -------------------- JWT RESPONSE DTO --------------------
     @Setter
     @Getter
     public static class JwtResponse {
