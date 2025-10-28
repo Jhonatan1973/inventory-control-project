@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile.back
     ports:
-      - "9090:9090"
+      - "9090:8080"
     volumes:
       - ./back-spring/controle-estoque/.env:/app/.env
     depends_on:
