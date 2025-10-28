@@ -1,14 +1,33 @@
 version: "3.9"
 
 services:
+  db:
+    image: postgres:15
+    container_name: db-controlstock
+    environment:
+      POSTGRES_DB: dbControlStock
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ycu4csgiXfd+1oGmBzLlwGvqcaJQsP406tEP0zdonvw=
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
   backend:
-    build:
+    build:  
       context: .
       dockerfile: Dockerfile.back
     ports:
       - "9090:9090"
     volumes:
       - ./back-spring/controle-estoque/.env:/app/.env
+    depends_on:
+      - db
+    networks:
+      - app-network
+
   frontend:
     build:
       context: .
@@ -20,6 +39,10 @@ services:
       - backend
     networks:
       - app-network
+
+volumes:
+  db-data:
+
 networks:
   app-network:
     driver: bridge
