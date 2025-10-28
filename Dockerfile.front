@@ -1,3 +1,4 @@
+# Etapa 1: Build do Angular
 FROM node:18 AS build
 
 WORKDIR /app
@@ -6,8 +7,14 @@ RUN npm install
 COPY front-angular/ ./
 RUN npm run build -- --configuration production
 
+# Etapa 2: Servir com Nginx
 FROM nginx:stable-alpine
-COPY --from=build /app/dist/front-angular /usr/share/nginx/html
+
+# Remove a página padrão do Nginx
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copia apenas a versão browser (que contém o index.html e os assets)
+COPY --from=build /app/dist/front-angular/browser /usr/share/nginx/html
 
 EXPOSE 4600
 CMD ["nginx", "-g", "daemon off;"]
