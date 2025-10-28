@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://10.1.0.45:9090/api',
+  apiUrl: 'http://backend:9090/api',
+  //apiUrl: 'http://10.1.0.45:9090/api',
   //apiUrl: 'http://localhost:9090/api',
   endpoints: {
     auth: '/auth/login',
