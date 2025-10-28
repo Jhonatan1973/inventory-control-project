@@ -5,12 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.back
-    container_name: backend
     ports:
-      - "8080:8080"
-    networks:
-      - app-network
-
+      - "9090:9090"
+    volumes:
+      - ./back-spring/controle-estoque/.env:/app/.env
   frontend:
     build:
       context: .
@@ -22,7 +20,6 @@ services:
       - backend
     networks:
       - app-network
-
 networks:
   app-network:
     driver: bridge
